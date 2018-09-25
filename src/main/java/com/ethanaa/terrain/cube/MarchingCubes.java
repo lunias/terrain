@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class MarchingCubes {
 
-    static float[] lerp(float[] vec1, float[] vec2, float alpha){
+    private static float[] lerp(float[] vec1, float[] vec2, float alpha){
 
         return new float[]{vec1[0] + (vec2[0] - vec1[0]) * alpha, vec1[1] + (vec2[1] - vec1[1]) * alpha, vec1[2] + (vec2[2] - vec1[2]) * alpha};
     }
 
-    static void marchingCubesChar(char[] values, int[] volDim, int volZFull, float[] voxDim, char isoLevel, int offset, CallbackMC callback) {
+    public static void marchingCubesChar(char[] values, int[] volDim, int volZFull, float[] voxDim, char isoLevel, int offset, CallbackMC callback) {
 
         ArrayList<float[]> vertices = new ArrayList<>();
 
@@ -161,7 +161,7 @@ public class MarchingCubes {
         callback.run();
     }
 
-    static void marchingCubesShort(short[] values, int[] volDim, int volZFull, float[] voxDim, short isoLevel, int offset, CallbackMC callback) {
+    public static void marchingCubesShort(short[] values, int[] volDim, int volZFull, float[] voxDim, short isoLevel, int offset, CallbackMC callback) {
 
         ArrayList<float[]> vertices = new ArrayList<>();
 
@@ -313,7 +313,7 @@ public class MarchingCubes {
         callback.run();
     }
 
-    static void marchingCubesInt(int[] values, int[] volDim, int volZFull, float[] voxDim, int isoLevel, int offset, CallbackMC callback) {
+    public static void marchingCubesInt(int[] values, int[] volDim, int volZFull, float[] voxDim, int isoLevel, int offset, CallbackMC callback) {
 
         ArrayList<float[]> vertices = new ArrayList<>();
 
@@ -465,7 +465,7 @@ public class MarchingCubes {
         callback.run();
     }
 
-    static void marchingCubesFloat(float[] values, int[] volDim, int volZFull, float[] voxDim, float isoLevel, int offset, CallbackMC callback) {
+    public static void marchingCubesFloat(float[] values, int[] volDim, int volZFull, float[] voxDim, float isoLevel, int offset, CallbackMC callback) {
 
         ArrayList<float[]> vertices = new ArrayList<>();
 
@@ -617,7 +617,7 @@ public class MarchingCubes {
         callback.run();
     }
 
-    static void marchingCubesDouble(double[] values, int[] volDim, int volZFull, float[] voxDim, double isoLevel, int offset, CallbackMC callback) {
+    public static void marchingCubesDouble(double[] values, int[] volDim, int volZFull, float[] voxDim, double isoLevel, int offset, CallbackMC callback) {
 
         ArrayList<float[]> vertices = new ArrayList<>();
 

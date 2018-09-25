@@ -1,20 +1,31 @@
 package com.ethanaa.terrain;
 
+import com.ethanaa.terrain.cube.CallbackMC;
+import com.ethanaa.terrain.cube.MarchingCubes;
 import com.ethanaa.terrain.noise.SimplexNoise;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.ObservableFloatArray;
 import javafx.scene.*;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import org.fxyz3d.shapes.primitives.CubeMesh;
+import org.fxyz3d.shapes.primitives.TriangulatedMesh;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class TerrainApplication extends Application implements CommandLineRunner {
@@ -133,6 +144,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
         Group boxGroup = new Group();
 
+        /*
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 for (int z = 0; z < 10; z++) {
@@ -141,17 +153,18 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
                     if (noise > .5) {
 
-                        Box box = new Box(10, 10, 10);
+                        CubeMesh cubeMesh = new CubeMesh(10d);
 
-                        box.setTranslateX(10 * x);
-                        box.setTranslateY(10 * y);
-                        box.setTranslateZ(10 * z);
+                        cubeMesh.setTranslateX(10 * x);
+                        cubeMesh.setTranslateY(10 * y);
+                        cubeMesh.setTranslateZ(10 * z);
 
-                        boxGroup.getChildren().add(box);
+                        boxGroup.getChildren().add(cubeMesh);
                     }
                 }
             }
         }
+        */
 
         boxGroup.setTranslateX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
         boxGroup.setTranslateY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
@@ -159,6 +172,84 @@ public class TerrainApplication extends Application implements CommandLineRunner
         boxGroup.setScaleX(MODEL_SCALE_FACTOR);
         boxGroup.setScaleY(MODEL_SCALE_FACTOR);
         boxGroup.setScaleZ(MODEL_SCALE_FACTOR);
+
+        CallbackMC callback = new CallbackMC() {
+            @Override
+            public void run() {
+
+                List<float[]> vertices = this.getVertices();
+
+                TriangleMesh marchedMesh = new TriangleMesh();
+
+                PhongMaterial material = new PhongMaterial(Color.RED);
+                material.setDiffuseColor(Color.RED);
+                material.setSpecularColor(Color.RED);
+
+                MeshView meshView = new MeshView(marchedMesh);
+                meshView.setDrawMode(DrawMode.LINE);
+                meshView.setMaterial(material);
+                meshView.setCullFace(CullFace.NONE);
+
+                AmbientLight light = new AmbientLight(Color.PERU);
+                light.getScope().add(meshView);
+
+                float[] points = {
+                        -100/2,  100/2, 0, // idx p0
+                        -100/2, -100/2, 0, // idx p1
+                        100/2,  100/2, 0, // idx p2
+                        100/2, -100/2, 0  // idx p3
+                };
+
+                int[] faces = {
+                        2, 3, 0, 2, 1, 0,
+                        2, 3, 1, 0, 3, 1
+                };
+
+                float[] texCoords = {
+                        1, 1, // idx t0
+                        1, 0, // idx t1
+                        0, 1, // idx t2
+                        0, 0  // idx t3
+                };
+
+                //marchedMesh.getPoints().setAll(points);
+                marchedMesh.getFaces().setAll(faces);
+                marchedMesh.getTexCoords().setAll(texCoords);
+
+                for (float[] vertex : vertices) {
+
+                    LOG.info(Arrays.toString(vertex));
+
+                    for (float coord : vertex) {
+                        marchedMesh.getPoints().addAll(coord * 10);
+                    }
+                }
+
+                /*
+                for(int i = 0; i < marchedMesh.getPoints().size() * 3; i += 3) {
+
+                    marchedMesh.getFaces().addAll(i+2,0, i-2,0, i+1,0);
+                    marchedMesh.getFaces().addAll(i+2,0, i-1,0, i-2,0);
+
+                    marchedMesh.getFaces().addAll(i+2,0, i-3,0, i-1,0);
+                    marchedMesh.getFaces().addAll(i,0, i-3,0, i+2,0);
+
+                    marchedMesh.getFaces().addAll(i,0, i+1,0, i-3,0);
+                    marchedMesh.getFaces().addAll(i+1,0, i-2,0, i-3,0);
+                }
+                */
+
+                Platform.runLater(() -> boxGroup.getChildren().add(new Group(light, meshView)));
+            }
+        };
+
+        CubeMesh cubeMesh = new CubeMesh(10d);
+        TriangleMesh triangleMesh = (TriangleMesh) cubeMesh.getMesh();
+
+        ObservableFloatArray observableFloatArray = triangleMesh.getPoints();
+        float[] values = observableFloatArray.toArray(new float[observableFloatArray.size()]);
+
+        MarchingCubes.marchingCubesFloat(values, new int[] {3, 2, 4}, 1, new float[] {10f, 10f, 10f}, 1.0f, 0, callback);
 
         return boxGroup;
     }

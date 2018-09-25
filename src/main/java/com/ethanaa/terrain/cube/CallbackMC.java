@@ -2,7 +2,7 @@ package com.ethanaa.terrain.cube;
 
 import java.util.ArrayList;
 
-abstract class CallbackMC implements Runnable {
+public abstract class CallbackMC implements Runnable {
 
     private ArrayList<float []> vertices;
 
@@ -11,7 +11,7 @@ abstract class CallbackMC implements Runnable {
         this.vertices = vertices;
     }
 
-    public ArrayList<float []> getVertices() {
+    protected ArrayList<float []> getVertices() {
 
         return this.vertices;
     }
