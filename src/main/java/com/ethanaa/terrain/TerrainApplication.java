@@ -1,5 +1,6 @@
 package com.ethanaa.terrain;
 
+import com.ethanaa.terrain.noise.SimplexNoise;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.effect.Light;
@@ -82,15 +83,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
         light.setTranslateY(0);
         light.setTranslateZ(-200);
 
-        Box box = new Box(100, 10, 100);
-        box.setTranslateX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
-        box.setTranslateY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
-        box.setTranslateZ(VIEWPORT_SIZE / 2);
-        box.setScaleX(MODEL_SCALE_FACTOR);
-        box.setScaleY(MODEL_SCALE_FACTOR);
-        box.setScaleZ(MODEL_SCALE_FACTOR);
-
-        Group sceneGroup = new Group(box, light);
+        Group sceneGroup = new Group(createBoxGroup(), light);
 
         SubScene subScene = new SubScene(sceneGroup, VIEWPORT_SIZE,VIEWPORT_SIZE,
                 true, SceneAntialiasing.BALANCED);
@@ -134,5 +127,39 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    public static Group createBoxGroup() {
+
+        Group boxGroup = new Group();
+
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+                for (int z = 0; z < 10; z++) {
+
+                    double noise = SimplexNoise.noise(x, y, z);
+
+                    if (noise > .5) {
+
+                        Box box = new Box(10, 10, 10);
+
+                        box.setTranslateX(10 * x);
+                        box.setTranslateY(10 * y);
+                        box.setTranslateZ(10 * z);
+
+                        boxGroup.getChildren().add(box);
+                    }
+                }
+            }
+        }
+
+        boxGroup.setTranslateX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
+        boxGroup.setTranslateY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
+        boxGroup.setTranslateZ(VIEWPORT_SIZE / 2);
+        boxGroup.setScaleX(MODEL_SCALE_FACTOR);
+        boxGroup.setScaleY(MODEL_SCALE_FACTOR);
+        boxGroup.setScaleZ(MODEL_SCALE_FACTOR);
+
+        return boxGroup;
     }
 }
