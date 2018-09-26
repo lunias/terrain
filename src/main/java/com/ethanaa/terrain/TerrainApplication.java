@@ -5,6 +5,7 @@ import com.ethanaa.terrain.cube.MarchingCubes;
 import com.ethanaa.terrain.noise.SimplexNoise;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.IntegerBinding;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.*;
 import javafx.scene.effect.Light;
@@ -191,7 +192,8 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 AmbientLight light = new AmbientLight(Color.PERU);
                 light.getScope().add(meshView);
 
-                Map<Integer, List<Integer>> seen = new TreeMap<>();
+                Map<Integer, String> indexMap = new TreeMap<>();
+                Map<String, List<Integer>> seen = new TreeMap<>();
 
                 int i = 0;
                 for (float[] vertex : vertices) {
@@ -202,17 +204,25 @@ public class TerrainApplication extends Application implements CommandLineRunner
                         marchedMesh.getPoints().addAll(coord * 50);
                     }
 
-                    seen.computeIfAbsent(i, k -> new ArrayList<>()).add(i);
+                    seen.computeIfAbsent(Arrays.toString(vertex), k -> new ArrayList<>()).add(i);
+                    indexMap.put(i, Arrays.toString(vertex));
 
                     marchedMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
                     i++;
                 }
 
-                for (Map.Entry<Integer, List<Integer>> entry : seen.entrySet()) {
+                Map<String, Boolean> check = new HashMap<>();
+                for (Map.Entry<Integer, String> entry : indexMap.entrySet()) {
 
-                    for (Integer loc : entry.getValue()) {
-                        marchedMesh.getFaces().addAll(loc);
-                    }
+                    String vName = entry.getValue();
+                    check.computeIfAbsent(vName, k -> {
+
+                        for (Integer loc : seen.get(entry.getValue())) {
+                            marchedMesh.getFaces().addAll((loc == 0 ? loc : loc - 1) % vertices.size(), loc, (loc + 1) % vertices.size());
+                        }
+
+                        return true;
+                    });
                 }
 
                 Platform.runLater(() -> boxGroup.getChildren().add(new Group(light, meshView)));
