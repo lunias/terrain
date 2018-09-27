@@ -20,6 +20,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz3d.shapes.primitives.CubeMesh;
+import org.fxyz3d.shapes.primitives.SegmentedSphereMesh;
+import org.fxyz3d.shapes.primitives.SpheroidMesh;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -27,6 +29,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 public class TerrainApplication extends Application implements CommandLineRunner {
@@ -145,6 +148,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
         Group boxGroup = new Group();
 
+        /*
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 for (int z = 0; z < 10; z++) {
@@ -164,6 +168,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 }
             }
         }
+        */
 
         boxGroup.setTranslateX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
         boxGroup.setTranslateY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
@@ -192,37 +197,49 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 AmbientLight light = new AmbientLight(Color.PERU);
                 light.getScope().add(meshView);
 
-                Map<Integer, String> indexMap = new TreeMap<>();
-                Map<String, List<Integer>> seen = new TreeMap<>();
+                Map<String, Integer> vertexIndices = new HashMap<>();
 
-                int i = 0;
-                for (float[] vertex : vertices) {
+                int p = 0;
+                for (int i = 0; i < vertices.size(); i += 3) {
 
-                    LOG.info(Arrays.toString(vertex));
+                    float[] v1 = vertices.get(i);
+                    String v1Name = Arrays.toString(v1);
 
-                    for (float coord : vertex) {
-                        marchedMesh.getPoints().addAll(coord * 50);
+                    float[] v2 = vertices.get(i + 1);
+                    String v2Name = Arrays.toString(v2);
+
+                    float[] v3 = vertices.get(i + 2);
+                    String v3Name = Arrays.toString(v3);
+
+                    Integer v1Index = vertexIndices.get(v1Name);
+                    if (v1Index == null) {
+                        vertexIndices.put(v1Name, p);
+                        v1Index = p;
+                        marchedMesh.getPoints().addAll(multiply(v1, 100));
+                        p++;
                     }
 
-                    seen.computeIfAbsent(Arrays.toString(vertex), k -> new ArrayList<>()).add(i);
-                    indexMap.put(i, Arrays.toString(vertex));
+                    Integer v2Index = vertexIndices.get(v2Name);
+                    if (v2Index == null) {
+                        vertexIndices.put(v2Name, p++);
+                        v2Index = vertexIndices.get(v2Name);
+                        marchedMesh.getPoints().addAll(multiply(v2, 100));
+                    }
 
-                    marchedMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
-                    i++;
-                }
+                    Integer v3Index = vertexIndices.get(v3Name);
+                    if (v3Index == null) {
+                        vertexIndices.put(v3Name, p++);
+                        v3Index = vertexIndices.get(v3Name);
+                        marchedMesh.getPoints().addAll(multiply(v3, 100));
+                    }
 
-                Map<String, Boolean> check = new HashMap<>();
-                for (Map.Entry<Integer, String> entry : indexMap.entrySet()) {
+                    LOG.info("[\n{}: {}\n {}: {}\n {}: {}\n]\n", v1Name, v1Index, v2Name, v2Index, v3Name, v3Index);
 
-                    String vName = entry.getValue();
-                    check.computeIfAbsent(vName, k -> {
-
-                        for (Integer loc : seen.get(entry.getValue())) {
-                            marchedMesh.getFaces().addAll((loc == 0 ? loc : loc - 1) % vertices.size(), loc, (loc + 1) % vertices.size());
-                        }
-
-                        return true;
-                    });
+                    marchedMesh.getFaces().addAll(v3Index, v3Index, v1Index, v1Index, v2Index, v2Index);
+                    marchedMesh.getTexCoords().addAll(
+                            0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0);
                 }
 
                 Platform.runLater(() -> boxGroup.getChildren().add(new Group(light, meshView)));
@@ -237,8 +254,15 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
         LOG.info(Arrays.toString(values));
 
-        MarchingCubes.marchingCubesFloat(values, new int[] {3, 2, 4}, 1, new float[] {1f, 1f, 1f}, 1f, 0, callback);
+        MarchingCubes.marchingCubesFloat(values, new int[] {3, 2, 4}, 1, new float[] {3f, 3f, 3f}, .1f, 0, callback);
 
         return boxGroup;
+    }
+
+    public static float[] multiply(float[] children, float number) {
+        for(int i = 0; i < children.length; i++) {
+            children[i] = children[i] * number;
+        }
+        return children;
     }
 }
