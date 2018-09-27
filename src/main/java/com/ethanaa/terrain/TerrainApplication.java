@@ -2,14 +2,21 @@ package com.ethanaa.terrain;
 
 import com.ethanaa.terrain.cube.CallbackMC;
 import com.ethanaa.terrain.cube.MarchingCubes;
-import com.ethanaa.terrain.noise.SimplexNoise;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -19,9 +26,8 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 import org.fxyz3d.shapes.primitives.CubeMesh;
-import org.fxyz3d.shapes.primitives.SegmentedSphereMesh;
-import org.fxyz3d.shapes.primitives.SpheroidMesh;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -29,7 +35,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @SpringBootApplication
 public class TerrainApplication extends Application implements CommandLineRunner {
@@ -41,10 +46,18 @@ public class TerrainApplication extends Application implements CommandLineRunner
     private static final double MODEL_Y_OFFSET = 0d;
     private static final double ZOOM_FACTOR = 2.5d;
     private static final double PAN_FACTOR = 10d;
-    private static final int VIEWPORT_SIZE = 1000;
+    private static final int VIEWPORT_SIZE = 500;
 
     private double mouseClickX;
     private double mouseClickY;
+
+    private IntegerProperty xp = new SimpleIntegerProperty(3);
+    private IntegerProperty yp = new SimpleIntegerProperty(3);
+    private IntegerProperty zp = new SimpleIntegerProperty(3);
+
+    private IntegerProperty lzFullP = new SimpleIntegerProperty(0);
+
+    private FloatProperty vxp = new SimpleFloatProperty(1);
 
     public static void main(String[] args) {
 
@@ -98,14 +111,48 @@ public class TerrainApplication extends Application implements CommandLineRunner
         light.setTranslateY(0);
         light.setTranslateZ(-200);
 
-        Group sceneGroup = new Group(createBoxGroup(), light);
+        Label lx = new Label("volDim x");
+        TextField x = new TextField();
+        x.textProperty().bindBidirectional(xp, new NumberStringConverter());
+
+        Label ly = new Label("volDim y");
+        TextField y = new TextField();
+
+        Label lz = new Label("volDim z");
+        TextField z = new TextField();
+
+        Label lzFull = new Label("volZFull");
+        TextField zFull = new TextField();
+
+        Label lvx = new Label("voxDim x");
+        TextField vx = new TextField();
+
+        Label lvy = new Label("voxDim y");
+        TextField vy = new TextField();
+
+        Label lvz = new Label("voxDim z");
+        TextField vz = new TextField();
+
+        Label lIso = new Label("iso");
+        TextField iso = new TextField();
+
+        Label lOffset = new Label("offset");
+        TextField offset = new TextField();
+
+        Button update = new Button("[Update]");
+
+        Group sceneGroup = new Group(createBoxGroup(update), light);
 
         SubScene subScene = new SubScene(sceneGroup, VIEWPORT_SIZE,VIEWPORT_SIZE,
                 true, SceneAntialiasing.BALANCED);
         subScene.setFill(Color.ALICEBLUE);
         subScene.setCamera(mapCamera);
 
-        Group root = new Group(subScene);
+        BorderPane root = new BorderPane(subScene);
+
+        HBox controls = new HBox(5);
+        controls.getChildren().addAll(lx, x, ly, y, lz, z, lzFull, zFull, lvx, vx, lvy, vy, lvz, vz, lIso, iso, lOffset, offset, update);
+        root.setBottom(controls);
 
         Scene scene = new Scene(root);
 
@@ -144,7 +191,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
         stage.show();
     }
 
-    public static Group createBoxGroup() {
+    public Group createBoxGroup(Button update) {
 
         Group boxGroup = new Group();
 
@@ -180,6 +227,8 @@ public class TerrainApplication extends Application implements CommandLineRunner
         CallbackMC callback = new CallbackMC() {
             @Override
             public void run() {
+
+                boxGroup.getChildren().clear();
 
                 List<float[]> vertices = this.getVertices();
 
@@ -233,7 +282,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
                         marchedMesh.getPoints().addAll(multiply(v3, 100));
                     }
 
-                    LOG.info("[\n{}: {}\n {}: {}\n {}: {}\n]\n", v1Name, v1Index, v2Name, v2Index, v3Name, v3Index);
+                    LOG.info("\n[{}: {}\n {}: {}\n {}: {}]", v1Name, v1Index, v2Name, v2Index, v3Name, v3Index);
 
                     marchedMesh.getFaces().addAll(v3Index, v3Index, v1Index, v1Index, v2Index, v2Index);
                     marchedMesh.getTexCoords().addAll(
@@ -254,7 +303,33 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
         LOG.info(Arrays.toString(values));
 
-        MarchingCubes.marchingCubesFloat(values, new int[] {3, 2, 4}, 1, new float[] {3f, 3f, 3f}, .1f, 0, callback);
+        float[][][] myCube = {
+                {{0f, 0f, 0f}, {1f, 0f, 0f}},
+                {{0f, 1f, 0f}, {1f, 1f, 0f}},
+                {{0f, 0f, 1f}, {1f, 0f, 1f}},
+                {{0f, 1f, 1f}, {1f, 1f, 1f}}
+        };
+
+        List<Float> myCubeValueList = new ArrayList<>();
+        for (int i = 0; i < myCube.length; i++) {
+            for (int j = 0; j < myCube[i].length; j++) {
+                for (int k = 0; k < myCube[i][j].length; k++) {
+                    myCubeValueList.add(myCube[i][j][k]);
+                }
+            }
+        }
+
+        float[] myCubeValues = new float[24];
+        for (int i = 0; i < myCubeValueList.size(); i++) {
+            myCubeValues[i] = myCubeValueList.get(i);
+        }
+
+        MarchingCubes.marchingCubesFloat(myCubeValues, new int[] {3, 2, 4}, 5, new float[] {1f, 1f, 1f}, .1f, 0, callback);
+
+        update.setOnAction(e -> {
+            LOG.info("Updating!");
+            MarchingCubes.marchingCubesFloat(myCubeValues, new int[] {xp.get(), 2, 4}, 5, new float[] {2f, 2f, 2f}, .1f, 0, callback);
+        });
 
         return boxGroup;
     }
