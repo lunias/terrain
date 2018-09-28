@@ -52,12 +52,18 @@ public class TerrainApplication extends Application implements CommandLineRunner
     private double mouseClickY;
 
     private IntegerProperty xp = new SimpleIntegerProperty(3);
-    private IntegerProperty yp = new SimpleIntegerProperty(3);
-    private IntegerProperty zp = new SimpleIntegerProperty(3);
+    private IntegerProperty yp = new SimpleIntegerProperty(2);
+    private IntegerProperty zp = new SimpleIntegerProperty(4);
 
-    private IntegerProperty lzFullP = new SimpleIntegerProperty(0);
+    private IntegerProperty zFullP = new SimpleIntegerProperty(1);
 
-    private FloatProperty vxp = new SimpleFloatProperty(1);
+    private FloatProperty vxp = new SimpleFloatProperty(1f);
+    private FloatProperty vyp = new SimpleFloatProperty(1f);
+    private FloatProperty vzp = new SimpleFloatProperty(1f);
+
+    private FloatProperty isop = new SimpleFloatProperty(.1f);
+
+    private IntegerProperty offsetp = new SimpleIntegerProperty(0);
 
     public static void main(String[] args) {
 
@@ -117,27 +123,35 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
         Label ly = new Label("volDim y");
         TextField y = new TextField();
+        y.textProperty().bindBidirectional(yp, new NumberStringConverter());
 
         Label lz = new Label("volDim z");
         TextField z = new TextField();
+        z.textProperty().bindBidirectional(zp, new NumberStringConverter());
 
         Label lzFull = new Label("volZFull");
         TextField zFull = new TextField();
+        zFull.textProperty().bindBidirectional(zFullP, new NumberStringConverter());
 
         Label lvx = new Label("voxDim x");
         TextField vx = new TextField();
+        vx.textProperty().bindBidirectional(vxp, new NumberStringConverter());
 
         Label lvy = new Label("voxDim y");
         TextField vy = new TextField();
+        vy.textProperty().bindBidirectional(vyp, new NumberStringConverter());
 
         Label lvz = new Label("voxDim z");
         TextField vz = new TextField();
+        vz.textProperty().bindBidirectional(vzp, new NumberStringConverter());
 
         Label lIso = new Label("iso");
         TextField iso = new TextField();
+        iso.textProperty().bindBidirectional(isop, new NumberStringConverter());
 
         Label lOffset = new Label("offset");
         TextField offset = new TextField();
+        offset.textProperty().bindBidirectional(offsetp, new NumberStringConverter());
 
         Button update = new Button("[Update]");
 
@@ -151,7 +165,8 @@ public class TerrainApplication extends Application implements CommandLineRunner
         BorderPane root = new BorderPane(subScene);
 
         HBox controls = new HBox(5);
-        controls.getChildren().addAll(lx, x, ly, y, lz, z, lzFull, zFull, lvx, vx, lvy, vy, lvz, vz, lIso, iso, lOffset, offset, update);
+        controls.getChildren().addAll(lx, x, ly, y, lz, z, lzFull, zFull,
+                lvx, vx, lvy, vy, lvz, vz, lIso, iso, lOffset, offset, update);
         root.setBottom(controls);
 
         Scene scene = new Scene(root);
@@ -231,6 +246,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 boxGroup.getChildren().clear();
 
                 List<float[]> vertices = this.getVertices();
+                LOG.info("Total Vertices: {}", vertices.size());
 
                 TriangleMesh marchedMesh = new TriangleMesh();
 
@@ -252,18 +268,18 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 for (int i = 0; i < vertices.size(); i += 3) {
 
                     float[] v1 = vertices.get(i);
-                    String v1Name = Arrays.toString(v1);
+                    String v1Name = String.format("%.2f, %.2f, %.2f", v1[0], v1[1], v1[2]);//Arrays.toString(v1);
 
                     float[] v2 = vertices.get(i + 1);
-                    String v2Name = Arrays.toString(v2);
+                    String v2Name = String.format("%.2f, %.2f, %.2f", v2[0], v2[1], v2[2]);//Arrays.toString(v2);
 
                     float[] v3 = vertices.get(i + 2);
-                    String v3Name = Arrays.toString(v3);
+                    String v3Name = String.format("%.2f, %.2f, %.2f", v3[0], v3[1], v3[2]);//Arrays.toString(v3);
 
                     Integer v1Index = vertexIndices.get(v1Name);
                     if (v1Index == null) {
                         vertexIndices.put(v1Name, p);
-                        v1Index = p;
+                        v1Index = vertexIndices.get(v1Name);
                         marchedMesh.getPoints().addAll(multiply(v1, 100));
                         p++;
                     }
@@ -282,26 +298,29 @@ public class TerrainApplication extends Application implements CommandLineRunner
                         marchedMesh.getPoints().addAll(multiply(v3, 100));
                     }
 
-                    LOG.info("\n[{}: {}\n {}: {}\n {}: {}]", v1Name, v1Index, v2Name, v2Index, v3Name, v3Index);
+                    LOG.info("face: {}, {}, {}", v1Index, v2Index, v3Index);
 
-                    marchedMesh.getFaces().addAll(v3Index, v3Index, v1Index, v1Index, v2Index, v2Index);
+                    marchedMesh.getFaces().addAll(v1Index, v1Index, v2Index, v2Index, v3Index, v3Index);
                     marchedMesh.getTexCoords().addAll(
                             0, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 0, 0);
                 }
 
+                for (Map.Entry<String, Integer> entry : sortByValue(vertexIndices).entrySet()) {
+                    LOG.info("{}: {}", entry.getValue(), entry.getKey());
+                }
+
+                LOG.info("Unique Vertices: {}", vertexIndices.size());
+
                 Platform.runLater(() -> boxGroup.getChildren().add(new Group(light, meshView)));
             }
         };
 
-        CubeMesh cubeMesh = new CubeMesh(10d);
-        TriangleMesh triangleMesh = (TriangleMesh) cubeMesh.getMesh();
-
+        CubeMesh shapeMesh = new CubeMesh(10d);
+        TriangleMesh triangleMesh = (TriangleMesh) shapeMesh.getMesh();
         ObservableFloatArray observableFloatArray = triangleMesh.getPoints();
         float[] values = observableFloatArray.toArray(new float[observableFloatArray.size()]);
-
-        LOG.info(Arrays.toString(values));
 
         float[][][] myCube = {
                 {{0f, 0f, 0f}, {1f, 0f, 0f}},
@@ -324,11 +343,17 @@ public class TerrainApplication extends Application implements CommandLineRunner
             myCubeValues[i] = myCubeValueList.get(i);
         }
 
-        MarchingCubes.marchingCubesFloat(myCubeValues, new int[] {3, 2, 4}, 5, new float[] {1f, 1f, 1f}, .1f, 0, callback);
+        LOG.info(Arrays.toString(myCubeValues));
+
+        MarchingCubes.marchingCubesFloat(myCubeValues,
+                new int[] {xp.get(), yp.get(), zp.get()}, zFullP.get(),
+                new float[] {vxp.get(), vyp.get(), vzp.get()}, isop.get(), offsetp.get(), callback);
 
         update.setOnAction(e -> {
-            LOG.info("Updating!");
-            MarchingCubes.marchingCubesFloat(myCubeValues, new int[] {xp.get(), 2, 4}, 5, new float[] {2f, 2f, 2f}, .1f, 0, callback);
+            MarchingCubes.marchingCubesFloat(myCubeValues,
+                    new int[] {xp.get(), yp.get(), zp.get()}, zFullP.get(),
+                    new float[] {vxp.get(), vyp.get(), vzp.get()}, isop.get(), offsetp.get(), callback);
+            LOG.info("Updated!");
         });
 
         return boxGroup;
@@ -339,5 +364,17 @@ public class TerrainApplication extends Application implements CommandLineRunner
             children[i] = children[i] * number;
         }
         return children;
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
     }
 }

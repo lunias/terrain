@@ -1,8 +1,15 @@
 package com.ethanaa.terrain.cube;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class MarchingCubes {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MarchingCubes.class);
 
     private static float[] lerp(float[] vec1, float[] vec2, float alpha){
 
@@ -478,6 +485,9 @@ public class MarchingCubes {
         float maxZ = voxDim[2] * (volZFull - 1);
         float maxAxisVal = Math.max(maxX, Math.max(maxY, maxZ));
 
+        LOG.info("maxX: {} maxY: {} maxZ: {} - mazAxisVal: {}",
+                maxX, maxY, maxZ, maxAxisVal);
+
         // Volume iteration
         for (int z = 0; z < volDim[2] - 1; z++) {
             for (int y = 0; y < volDim[1] - 1; y++) {
@@ -509,6 +519,10 @@ public class MarchingCubes {
 
                     //							  X              Y                    Z
                     float position[] = new float[]{x * voxDim[0], y * voxDim[1], (z + offset) * voxDim[2]};
+
+                    LOG.info("[x, y, z]: [{}, {}, {}] p: {} - {}", x, y, z, p, Arrays.toString(position));
+                    LOG.info("[p, px, pxy, py]: [{}, {}, {}, {}]", p, px, pxy, py);
+                    LOG.info("[pz, pxz, pxy, pyz]: [{}, {}, {}, {}]", pz, pxz, pxy, pyz);
 
                     // Voxel intensities
                     float value0 = values[p],
