@@ -51,9 +51,9 @@ public class TerrainApplication extends Application implements CommandLineRunner
     private double mouseClickX;
     private double mouseClickY;
 
-    private IntegerProperty xp = new SimpleIntegerProperty(3);
-    private IntegerProperty yp = new SimpleIntegerProperty(2);
-    private IntegerProperty zp = new SimpleIntegerProperty(4);
+    private IntegerProperty xp = new SimpleIntegerProperty(10);
+    private IntegerProperty yp = new SimpleIntegerProperty(10);
+    private IntegerProperty zp = new SimpleIntegerProperty(10);
 
     private IntegerProperty zFullP = new SimpleIntegerProperty(1);
 
@@ -338,10 +338,14 @@ public class TerrainApplication extends Application implements CommandLineRunner
             }
         }
 
+        /*
         float[] myCubeValues = new float[24];
         for (int i = 0; i < myCubeValueList.size(); i++) {
             myCubeValues[i] = myCubeValueList.get(i);
         }
+        */
+
+        float[] myCubeValues = generateScalarFieldFloat(new int[]{10, 10, 10});
 
         LOG.info(Arrays.toString(myCubeValues));
 
@@ -357,6 +361,52 @@ public class TerrainApplication extends Application implements CommandLineRunner
         });
 
         return boxGroup;
+    }
+
+    // hyperboloid equation: x^2 + y^2 - z^2 - 25
+    public static float[] generateScalarFieldFloat(int[] size) {
+
+        final float[] scalarField = new float[size[0] * size[1] * size[2]];
+        float axisMin = -10;
+        float axisMax = 10;
+        float axisRange = axisMax - axisMin;
+
+        for (int k = 0; k < size[0]; k++) {
+            for (int j = 0; j < size[1]; j++) {
+                for (int i = 0; i < size[2]; i++) {
+                    // actual values
+                    float x = axisMin + axisRange * i / (size[0] - 1);
+                    float y = axisMin + axisRange * j / (size[1] - 1);
+                    float z = axisMin + axisRange * k / (size[2] - 1);
+                    scalarField[k + size[1] * (j + size[2] * i)] = x * x + y * y - z * z - 25;
+                }
+            }
+        }
+
+        return scalarField;
+    }
+
+    // spheroid equation: x^2 + y^2 + z^2
+    public static float[] generateScalarFieldFloat2(int[] size) {
+
+        final float[] scalarField = new float[size[0] * size[1] * size[2]];
+        float axisMin = -10;
+        float axisMax = 10;
+        float axisRange = axisMax - axisMin;
+
+        for (int k = 0; k < size[0]; k++) {
+            for (int j = 0; j < size[1]; j++) {
+                for (int i = 0; i < size[2]; i++) {
+                    // actual values
+                    float x = axisMin + axisRange * i / (size[0] - 1);
+                    float y = axisMin + axisRange * j / (size[1] - 1);
+                    float z = axisMin + axisRange * k / (size[2] - 1);
+                    scalarField[k + size[1] * (j + size[2] * i)] = x * x + y * y + z * z;
+                }
+            }
+        }
+
+        return scalarField;
     }
 
     public static float[] multiply(float[] children, float number) {
