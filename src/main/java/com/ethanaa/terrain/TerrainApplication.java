@@ -1,15 +1,13 @@
 package com.ethanaa.terrain;
 
 import javafx.application.Application;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.*;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -60,7 +58,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
         }
 
         MeshView meshView = terrainGenerator.genMeshView(
-                new float[]{-1024, 1024}, new float[]{-1024, 1024}, new float[]{-1024, 1024}, 10, 1024);
+                new float[]{-1024, 1024}, new float[]{-1024, 1024}, new float[]{-1024, 1024}, 200f, 1024);
 
         AmbientLight meshLight = new AmbientLight(Color.LIGHTYELLOW);
         meshLight.getScope().add(meshView);
@@ -87,12 +85,37 @@ public class TerrainApplication extends Application implements CommandLineRunner
         return light;
     }
 
+    private Group createAxes() {
+
+        final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+
+        final PhongMaterial greenMaterial = new PhongMaterial();
+        greenMaterial.setDiffuseColor(Color.DARKGREEN);
+        greenMaterial.setSpecularColor(Color.GREEN);
+
+        final PhongMaterial blueMaterial = new PhongMaterial();
+        blueMaterial.setDiffuseColor(Color.DARKBLUE);
+        blueMaterial.setSpecularColor(Color.BLUE);
+
+        final Box xAxis = new Box(240.0, 1, 1);
+        final Box yAxis = new Box(1, 240.0, 1);
+        final Box zAxis = new Box(1, 1, 240.0);
+
+        xAxis.setMaterial(redMaterial);
+        yAxis.setMaterial(greenMaterial);
+        zAxis.setMaterial(blueMaterial);
+
+        return new Group(xAxis, yAxis, zAxis);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
 
         stage.setTitle("Terrain");
 
-        Group sceneGroup = new Group(createMeshGroup(), createLight());
+        Group sceneGroup = new Group(createMeshGroup(), createLight(), createAxes());
 
         SubScene subScene = new SubScene(sceneGroup,
                 VIEWPORT_SIZE, VIEWPORT_SIZE,

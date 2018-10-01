@@ -616,10 +616,12 @@ public class MarchingCubes {
                         int index2 = TablesMC.MC_TRI_TABLE[cubeindex + i + 1];
                         int index3 = TablesMC.MC_TRI_TABLE[cubeindex + i + 2];
 
+                        // REVERSED (used to be 0, 1, 2)
+
                         // Add triangles vertices normalized with the maximal possible value
-                        vertices.add(new float[] {vertList[index3][0] / maxAxisVal - 0.5f, vertList[index3][1] / maxAxisVal - 0.5f, vertList[index3][2] / maxAxisVal - 0.5f});
-                        vertices.add(new float[] {vertList[index2][0] / maxAxisVal - 0.5f, vertList[index2][1] / maxAxisVal - 0.5f, vertList[index2][2] / maxAxisVal - 0.5f});
-                        vertices.add(new float[] {vertList[index1][0] / maxAxisVal - 0.5f, vertList[index1][1] / maxAxisVal - 0.5f, vertList[index1][2] / maxAxisVal - 0.5f});
+                        vertices.add(new float[] {vertList[index3][2] / maxAxisVal - 0.5f, vertList[index3][1] / maxAxisVal - 0.5f, vertList[index3][0] / maxAxisVal - 0.5f});
+                        vertices.add(new float[] {vertList[index2][2] / maxAxisVal - 0.5f, vertList[index2][1] / maxAxisVal - 0.5f, vertList[index2][0] / maxAxisVal - 0.5f});
+                        vertices.add(new float[] {vertList[index1][2] / maxAxisVal - 0.5f, vertList[index1][1] / maxAxisVal - 0.5f, vertList[index1][0] / maxAxisVal - 0.5f});
 
                         i += 3;
                     }

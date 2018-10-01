@@ -173,7 +173,7 @@ public class TerrainGenerator {
 
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(texture);
-        material.setSpecularColor(Color.WHITE);
+        material.setSpecularColor(Color.RED);
 
         meshView.setMaterial(material);
         meshView.setDrawMode(DrawMode.FILL);
