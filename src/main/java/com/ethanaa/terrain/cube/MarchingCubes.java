@@ -485,7 +485,7 @@ public class MarchingCubes {
         float maxZ = voxDim[2] * (volZFull - 1);
         float maxAxisVal = Math.max(maxX, Math.max(maxY, maxZ));
 
-        LOG.info("maxX: {} maxY: {} maxZ: {} - mazAxisVal: {}",
+        LOG.debug("maxX: {} maxY: {} maxZ: {} - mazAxisVal: {}",
                 maxX, maxY, maxZ, maxAxisVal);
 
         // Volume iteration
@@ -520,9 +520,9 @@ public class MarchingCubes {
                     //							  X              Y                    Z
                     float position[] = new float[]{x * voxDim[0], y * voxDim[1], (z + offset) * voxDim[2]};
 
-                    LOG.info("[x, y, z]: [{}, {}, {}] p: {} - {}", x, y, z, p, Arrays.toString(position));
-                    LOG.info("[p, px, pxy, py]: [{}, {}, {}, {}]", p, px, pxy, py);
-                    LOG.info("[pz, pxz, pxy, pyz]: [{}, {}, {}, {}]", pz, pxz, pxy, pyz);
+                    LOG.debug("[x, y, z]: [{}, {}, {}] p: {} - {}", x, y, z, p, Arrays.toString(position));
+                    LOG.debug("[p, px, pxy, py]: [{}, {}, {}, {}]", p, px, pxy, py);
+                    LOG.debug("[pz, pxz, pxy, pyz]: [{}, {}, {}, {}]", pz, pxz, pxy, pyz);
 
                     // Voxel intensities
                     float value0 = values[p],
