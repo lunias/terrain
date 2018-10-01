@@ -177,7 +177,7 @@ public class TerrainGenerator {
 
         meshView.setMaterial(material);
         meshView.setDrawMode(DrawMode.FILL);
-        meshView.setCullFace(CullFace.NONE);
+        meshView.setCullFace(CullFace.FRONT);
 
         return meshView;
     }
