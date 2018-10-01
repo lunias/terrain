@@ -2,19 +2,20 @@ package com.ethanaa.terrain;
 
 import com.ethanaa.terrain.cube.CallbackMC;
 import com.ethanaa.terrain.cube.MarchingCubes;
+import com.ethanaa.terrain.noise.SimplexNoise;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.ObservableFloatArray;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -27,13 +28,14 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
-import org.fxyz3d.shapes.primitives.CubeMesh;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.util.ResourceUtils;
 
+import java.io.*;
 import java.util.*;
 
 @SpringBootApplication
@@ -46,14 +48,14 @@ public class TerrainApplication extends Application implements CommandLineRunner
     private static final double MODEL_Y_OFFSET = 0d;
     private static final double ZOOM_FACTOR = 2.5d;
     private static final double PAN_FACTOR = 10d;
-    private static final int VIEWPORT_SIZE = 500;
+    private static final int VIEWPORT_SIZE = 1000;
 
     private double mouseClickX;
     private double mouseClickY;
 
-    private IntegerProperty xp = new SimpleIntegerProperty(10);
-    private IntegerProperty yp = new SimpleIntegerProperty(10);
-    private IntegerProperty zp = new SimpleIntegerProperty(10);
+    private IntegerProperty xp = new SimpleIntegerProperty(16);
+    private IntegerProperty yp = new SimpleIntegerProperty(16);
+    private IntegerProperty zp = new SimpleIntegerProperty(16);
 
     private IntegerProperty zFullP = new SimpleIntegerProperty(1);
 
@@ -61,7 +63,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
     private FloatProperty vyp = new SimpleFloatProperty(1f);
     private FloatProperty vzp = new SimpleFloatProperty(1f);
 
-    private FloatProperty isop = new SimpleFloatProperty(.1f);
+    private FloatProperty isop = new SimpleFloatProperty(10f);
 
     private IntegerProperty offsetp = new SimpleIntegerProperty(0);
 
@@ -250,16 +252,30 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
                 TriangleMesh marchedMesh = new TriangleMesh();
 
-                PhongMaterial material = new PhongMaterial(Color.RED);
-                material.setDiffuseColor(Color.RED);
+                marchedMesh.getTexCoords().addAll(
+                        .1f, .1f,
+                        .1f, .3f,
+                        .1f, .7f,
+                        .1f, .9f);
+
+                PhongMaterial material = new PhongMaterial(Color.WHITE);
+
+                Image image = null;
+                try {
+                    image = new Image(ResourceUtils.getFile("classpath:red_gradient.png").toURI().toString());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                material.setDiffuseMap(image);
                 material.setSpecularColor(Color.RED);
 
                 MeshView meshView = new MeshView(marchedMesh);
                 meshView.setDrawMode(DrawMode.FILL);
                 meshView.setMaterial(material);
-                meshView.setCullFace(CullFace.NONE);
+                meshView.setCullFace(CullFace.BACK);
 
-                AmbientLight light = new AmbientLight(Color.PERU);
+                AmbientLight light = new AmbientLight(Color.LIGHTYELLOW);
                 light.getScope().add(meshView);
 
                 Map<String, Integer> vertexIndices = new HashMap<>();
@@ -268,19 +284,23 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 for (int i = 0; i < vertices.size(); i += 3) {
 
                     float[] v1 = vertices.get(i);
-                    String v1Name = String.format("%.2f, %.2f, %.2f", v1[0], v1[1], v1[2]);//Arrays.toString(v1);
+                    String v1Name = Arrays.toString(v1);
 
                     float[] v2 = vertices.get(i + 1);
-                    String v2Name = String.format("%.2f, %.2f, %.2f", v2[0], v2[1], v2[2]);//Arrays.toString(v2);
+                    String v2Name = Arrays.toString(v2);
 
                     float[] v3 = vertices.get(i + 2);
-                    String v3Name = String.format("%.2f, %.2f, %.2f", v3[0], v3[1], v3[2]);//Arrays.toString(v3);
+                    String v3Name = Arrays.toString(v3);
+
+                    float maxZ = Math.max(Math.max(v1[2], v2[2]), v3[2]);
+                    LOG.info("maxZ = {}", maxZ);
+                    int texture = maxZ < -.5 ? 0 : maxZ < 0 ? 1 : maxZ < .5 ? 2 : 3;
 
                     Integer v1Index = vertexIndices.get(v1Name);
                     if (v1Index == null) {
                         vertexIndices.put(v1Name, p);
                         v1Index = vertexIndices.get(v1Name);
-                        marchedMesh.getPoints().addAll(multiply(v1, 100));
+                        marchedMesh.getPoints().addAll(multiply(v1, 1024));
                         p++;
                     }
 
@@ -288,23 +308,19 @@ public class TerrainApplication extends Application implements CommandLineRunner
                     if (v2Index == null) {
                         vertexIndices.put(v2Name, p++);
                         v2Index = vertexIndices.get(v2Name);
-                        marchedMesh.getPoints().addAll(multiply(v2, 100));
+                        marchedMesh.getPoints().addAll(multiply(v2, 1024));
                     }
 
                     Integer v3Index = vertexIndices.get(v3Name);
                     if (v3Index == null) {
                         vertexIndices.put(v3Name, p++);
                         v3Index = vertexIndices.get(v3Name);
-                        marchedMesh.getPoints().addAll(multiply(v3, 100));
+                        marchedMesh.getPoints().addAll(multiply(v3, 1024));
                     }
 
                     LOG.info("face: {}, {}, {}", v1Index, v2Index, v3Index);
 
-                    marchedMesh.getFaces().addAll(v1Index, v1Index, v2Index, v2Index, v3Index, v3Index);
-                    marchedMesh.getTexCoords().addAll(
-                            0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0);
+                    marchedMesh.getFaces().addAll(v1Index, texture, v2Index, texture, v3Index, texture);
                 }
 
                 for (Map.Entry<String, Integer> entry : sortByValue(vertexIndices).entrySet()) {
@@ -317,35 +333,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
             }
         };
 
-        CubeMesh shapeMesh = new CubeMesh(10d);
-        TriangleMesh triangleMesh = (TriangleMesh) shapeMesh.getMesh();
-        ObservableFloatArray observableFloatArray = triangleMesh.getPoints();
-        float[] values = observableFloatArray.toArray(new float[observableFloatArray.size()]);
-
-        float[][][] myCube = {
-                {{0f, 0f, 0f}, {1f, 0f, 0f}},
-                {{0f, 1f, 0f}, {1f, 1f, 0f}},
-                {{0f, 0f, 1f}, {1f, 0f, 1f}},
-                {{0f, 1f, 1f}, {1f, 1f, 1f}}
-        };
-
-        List<Float> myCubeValueList = new ArrayList<>();
-        for (int i = 0; i < myCube.length; i++) {
-            for (int j = 0; j < myCube[i].length; j++) {
-                for (int k = 0; k < myCube[i][j].length; k++) {
-                    myCubeValueList.add(myCube[i][j][k]);
-                }
-            }
-        }
-
-        /*
-        float[] myCubeValues = new float[24];
-        for (int i = 0; i < myCubeValueList.size(); i++) {
-            myCubeValues[i] = myCubeValueList.get(i);
-        }
-        */
-
-        float[] myCubeValues = generateScalarFieldFloat(new int[]{10, 10, 10});
+        float[] myCubeValues = genSimplex3d(new int[]{xp.get(), yp.get(), zp.get()});
 
         LOG.info(Arrays.toString(myCubeValues));
 
@@ -361,6 +349,67 @@ public class TerrainApplication extends Application implements CommandLineRunner
         });
 
         return boxGroup;
+    }
+
+    public static float[] genSimplex3d(int[] size) {
+
+        final float[] scalarField = new float[size[0] * size[1] * size[2]];
+
+        float axisMin = -1024;
+        float axisMax = 1024;
+        float axisRange = axisMax - axisMin;
+
+        for (int k = 0; k < size[0]; k++) {
+            for (int j = 0; j < size[1]; j++) {
+                for (int i = 0; i < size[2]; i++) {
+                    // actual values
+                    double x = axisMin + axisRange * i / (size[0] - 1);
+                    double y = axisMin + axisRange * j / (size[1] - 1);
+                    double z = axisMin + axisRange * k / (size[2] - 1);
+
+                    double factor = 1;
+                    double nx = (x/axisRange - .5) * factor;
+                    double ny = (y/axisRange - .5) * factor;
+                    double nz = (z/axisRange - .5) * factor;
+
+                    double e = Math.pow(
+                            SimplexNoise.noise(nx, ny, nz) +
+                                    .5 * SimplexNoise.noise(2 * nx, 2 * ny, 2 * nz) +
+                                    .25 * SimplexNoise.noise(4 * nx, 4 * ny, 4 * nz)
+                            , 2);
+
+                    double e2 = Math.pow(
+                            SimplexNoise.noise(nx, ny) +
+                                    .5 * SimplexNoise.noise(2 * nx, 2 * ny, 2) +
+                                    .25 * SimplexNoise.noise(4 * nx, 4 * ny, 4)
+                            , 2);
+
+                    scalarField[k + size[1] * (j + size[2] * i)]
+                            = (float) ((x * Math.cos(1)) + (y * Math.cos(1) * e2) + ((z * Math.cos(1) * e)));
+                }
+            }
+        }
+
+        return scalarField;
+    }
+
+    public static float[] multiply(float[] children, float number) {
+        for(int i = 0; i < children.length; i++) {
+            children[i] = children[i] * number;
+        }
+        return children;
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
     }
 
     // hyperboloid equation: x^2 + y^2 - z^2 - 25
@@ -401,30 +450,11 @@ public class TerrainApplication extends Application implements CommandLineRunner
                     float x = axisMin + axisRange * i / (size[0] - 1);
                     float y = axisMin + axisRange * j / (size[1] - 1);
                     float z = axisMin + axisRange * k / (size[2] - 1);
-                    scalarField[k + size[1] * (j + size[2] * i)] = x * x + y * y + z * z;
+                    scalarField[k + size[1] * (j + size[2] * i)] = x * x + y * y + z * z - 1;
                 }
             }
         }
 
         return scalarField;
-    }
-
-    public static float[] multiply(float[] children, float number) {
-        for(int i = 0; i < children.length; i++) {
-            children[i] = children[i] * number;
-        }
-        return children;
-    }
-
-    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
-        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-
-        Map<K, V> result = new LinkedHashMap<>();
-        for (Map.Entry<K, V> entry : list) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-
-        return result;
     }
 }
