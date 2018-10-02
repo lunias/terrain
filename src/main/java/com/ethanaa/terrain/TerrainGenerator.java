@@ -135,7 +135,7 @@ public class TerrainGenerator {
                     String v3Name = Arrays.toString(v3);
 
                     float maxZ = Math.max(Math.max(v1[2], v2[2]), v3[2]);
-                    int texture = maxZ < -.5 ? 0 : maxZ < 0 ? 1 : maxZ < .5 ? 2 : 3;
+                    int texture = maxZ < .1 ? 0 : maxZ < .3 ? 1 : maxZ < .7 ? 2 : 3;
 
                     Integer v1Index = vertexIndices.get(v1Name);
                     if (v1Index == null) {
@@ -173,7 +173,7 @@ public class TerrainGenerator {
 
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(texture);
-        material.setSpecularColor(Color.RED);
+        material.setSpecularColor(Color.WHITE);
 
         meshView.setMaterial(material);
         meshView.setDrawMode(DrawMode.FILL);

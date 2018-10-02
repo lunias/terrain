@@ -28,8 +28,8 @@ public class TerrainApplication extends Application implements CommandLineRunner
     private static final double MODEL_X_OFFSET = 0d;
     private static final double MODEL_Y_OFFSET = 0d;
     private static final double ZOOM_FACTOR = 2.5d;
-    private static final double PAN_FACTOR = 10d;
-    private static final int VIEWPORT_SIZE = 500;
+    private static final double PAN_FACTOR = 100d;
+    private static final int VIEWPORT_SIZE = 1024;
 
     private double mouseClickX;
     private double mouseClickY;
@@ -46,27 +46,50 @@ public class TerrainApplication extends Application implements CommandLineRunner
         LOG.info("Welcome to terrain");
     }
 
-    public Group createMeshGroup() {
+    private Group createMeshGroup() {
 
-        TerrainGenerator terrainGenerator = null;
+        TerrainGenerator terrainGenerator;
         try {
             terrainGenerator = new TerrainGenerator(
-                    16, 16, 16, "blue_gradient.png");
+                    16, 16, 16, "dark_red_gradient.png");
         } catch (FileNotFoundException fnfe) {
             LOG.error("Could not find texture resource", fnfe);
             return null;
         }
 
-        MeshView meshView = terrainGenerator.genMeshView(
-                new float[]{-1024, 1024}, new float[]{-1024, 1024}, new float[]{-1024, 1024}, 200f, 1024);
+        int size = 1024;
 
-        AmbientLight meshLight = new AmbientLight(Color.LIGHTYELLOW);
-        meshLight.getScope().add(meshView);
+        int zMax = 1024;
+        int zMin = 0;
 
-        return new Group(meshView, meshLight);
+        Group group = new Group();
+        for (int xOffset = 0; xOffset < 5; xOffset++) {
+
+            int xMin = 1024 * xOffset;
+            int xMax = 1024 * (xOffset + 1);
+
+            for (int yOffset = 0; yOffset < 5; yOffset++) {
+
+                int yMin = 1024 * yOffset;
+                int yMax = 1024 * (yOffset + 1);
+
+                MeshView meshView = terrainGenerator.genMeshView(
+                        new float[]{xMin, xMax}, new float[]{yMin, yMax}, new float[]{zMin, zMax}, 200f, size);
+
+                meshView.setLayoutX(xOffset * size + size / 2);
+                meshView.setLayoutY(yOffset * size + size / 2);
+
+                AmbientLight meshLight = new AmbientLight(Color.WHITE);
+                meshLight.getScope().add(meshView);
+
+                group.getChildren().addAll(meshView, meshLight);
+            }
+        }
+
+        return group;
     }
 
-    public PointLight createLight() {
+    private PointLight createLight() {
 
         Light.Distant distant = new Light.Distant();
         distant.setAzimuth(-135.0f);
@@ -120,7 +143,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
         SubScene subScene = new SubScene(sceneGroup,
                 VIEWPORT_SIZE, VIEWPORT_SIZE,
                 true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.ALICEBLUE);
+        subScene.setFill(Color.INDIANRED);
 
         Translate mapCameraPan = new Translate(0, 0, 0);
 
