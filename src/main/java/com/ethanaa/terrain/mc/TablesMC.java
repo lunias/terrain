@@ -1,4 +1,4 @@
-package com.ethanaa.terrain.cube;
+package com.ethanaa.terrain.mc;
 
 public class TablesMC {
 

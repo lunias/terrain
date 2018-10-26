@@ -1,7 +1,7 @@
 package com.ethanaa.terrain;
 
-import com.ethanaa.terrain.cube.CallbackMC;
-import com.ethanaa.terrain.cube.MarchingCubes;
+import com.ethanaa.terrain.mc.CallbackMC;
+import com.ethanaa.terrain.mc.MarchingCubes;
 import com.ethanaa.terrain.noise.SimplexNoise;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

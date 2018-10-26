@@ -1,4 +1,4 @@
-package com.ethanaa.terrain.cube;
+package com.ethanaa.terrain.mc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class MarchingCubes {
             for (int y = 0; y < volDim[1] - 1; y++) {
                 for (int x = 0; x < volDim[0] - 1; x++) {
 
-                    // Indices pointing to cube vertices
+                    // Indices pointing to mc vertices
                     //              pyz  ___________________  pxyz
                     //                  /|                 /|
                     //                 / |                / |
@@ -91,7 +91,7 @@ public class MarchingCubes {
                     // Interpolate the positions based od voxel intensities
                     float mu = 0.5f;
 
-                    // bottom of the cube
+                    // bottom of the mc
                     if ((bits & 1) != 0) {
                         mu = (isoLevel - value0) / (value1 - value0);
                         vertList[0] = lerp(position, new float[]{position[0] + voxDim[0], position[1], position[2]}, mu);
@@ -108,7 +108,7 @@ public class MarchingCubes {
                         mu = (isoLevel - value0) / (value2 - value0);
                         vertList[3] = lerp(position, new float[]{position[0], position[1] + voxDim[1], position[2]}, mu);
                     }
-                    // top of the cube
+                    // top of the mc
                     if ((bits & 16) != 0) {
                         mu = (isoLevel - value4) / (value5 - value4);
                         vertList[4] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0] + voxDim[0], position[1], position[2] + voxDim[2]}, mu);
@@ -125,7 +125,7 @@ public class MarchingCubes {
                         mu = (isoLevel - value4) / (value6 - value4);
                         vertList[7] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0], position[1] + voxDim[1], position[2] + voxDim[2]}, mu);
                     }
-                    // vertical lines of the cube
+                    // vertical lines of the mc
                     if ((bits & 256) != 0) {
                         mu = (isoLevel - value0) / (value4 - value0);
                         vertList[8] = lerp(position, new float[]{position[0], position[1], position[2] + voxDim[2]}, mu);
@@ -186,7 +186,7 @@ public class MarchingCubes {
             for (int y = 0; y < volDim[1] - 1; y++) {
                 for (int x = 0; x < volDim[0] - 1; x++) {
 
-                    // Indices pointing to cube vertices
+                    // Indices pointing to mc vertices
                     //              pyz  ___________________  pxyz
                     //                  /|                 /|
                     //                 / |                / |
@@ -243,7 +243,7 @@ public class MarchingCubes {
                     // Interpolate the positions based od voxel intensities
                     float mu = 0.5f;
 
-                    // bottom of the cube
+                    // bottom of the mc
                     if ((bits & 1) != 0) {
                         mu = (isoLevel - value0) / (value1 - value0);
                         vertList[0] = lerp(position, new float[]{position[0] + voxDim[0], position[1], position[2]}, mu);
@@ -260,7 +260,7 @@ public class MarchingCubes {
                         mu = (isoLevel - value0) / (value2 - value0);
                         vertList[3] = lerp(position, new float[]{position[0], position[1] + voxDim[1], position[2]}, mu);
                     }
-                    // top of the cube
+                    // top of the mc
                     if ((bits & 16) != 0) {
                         mu = (isoLevel - value4) / (value5 - value4);
                         vertList[4] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0] + voxDim[0], position[1], position[2] + voxDim[2]}, mu);
@@ -277,7 +277,7 @@ public class MarchingCubes {
                         mu = (isoLevel - value4) / (value6 - value4);
                         vertList[7] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0], position[1] + voxDim[1], position[2] + voxDim[2]}, mu);
                     }
-                    // vertical lines of the cube
+                    // vertical lines of the mc
                     if ((bits & 256) != 0) {
                         mu = (isoLevel - value0) / (value4 - value0);
                         vertList[8] = lerp(position, new float[]{position[0], position[1], position[2] + voxDim[2]}, mu);
@@ -338,7 +338,7 @@ public class MarchingCubes {
             for (int y = 0; y < volDim[1] - 1; y++) {
                 for (int x = 0; x < volDim[0] - 1; x++) {
 
-                    // Indices pointing to cube vertices
+                    // Indices pointing to mc vertices
                     //              pyz  ___________________  pxyz
                     //                  /|                 /|
                     //                 / |                / |
@@ -395,7 +395,7 @@ public class MarchingCubes {
                     // Interpolate the positions based od voxel intensities
                     float mu = 0.5f;
 
-                    // bottom of the cube
+                    // bottom of the mc
                     if ((bits & 1) != 0) {
                         mu = (isoLevel - value0) / (value1 - value0);
                         vertList[0] = lerp(position, new float[]{position[0] + voxDim[0], position[1], position[2]}, mu);
@@ -412,7 +412,7 @@ public class MarchingCubes {
                         mu = (isoLevel - value0) / (value2 - value0);
                         vertList[3] = lerp(position, new float[]{position[0], position[1] + voxDim[1], position[2]}, mu);
                     }
-                    // top of the cube
+                    // top of the mc
                     if ((bits & 16) != 0) {
                         mu = (isoLevel - value4) / (value5 - value4);
                         vertList[4] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0] + voxDim[0], position[1], position[2] + voxDim[2]}, mu);
@@ -429,7 +429,7 @@ public class MarchingCubes {
                         mu = (isoLevel - value4) / (value6 - value4);
                         vertList[7] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0], position[1] + voxDim[1], position[2] + voxDim[2]}, mu);
                     }
-                    // vertical lines of the cube
+                    // vertical lines of the mc
                     if ((bits & 256) != 0) {
                         mu = (isoLevel - value0) / (value4 - value0);
                         vertList[8] = lerp(position, new float[]{position[0], position[1], position[2] + voxDim[2]}, mu);
@@ -493,7 +493,7 @@ public class MarchingCubes {
             for (int y = 0; y < volDim[1] - 1; y++) {
                 for (int x = 0; x < volDim[0] - 1; x++) {
 
-                    // Indices pointing to cube vertices
+                    // Indices pointing to mc vertices
                     //              pyz  ___________________  pxyz
                     //                  /|                 /|
                     //                 / |                / |
@@ -554,7 +554,7 @@ public class MarchingCubes {
                     // Interpolate the positions based od voxel intensities
                     float mu = 0.5f;
 
-                    // bottom of the cube
+                    // bottom of the mc
                     if ((bits & 1) != 0) {
                         mu = (float) ((isoLevel - value0) / (value1 - value0));
                         vertList[0] = lerp(position, new float[]{position[0] + voxDim[0], position[1], position[2]}, mu);
@@ -571,7 +571,7 @@ public class MarchingCubes {
                         mu = (float) ((isoLevel - value0) / (value2 - value0));
                         vertList[3] = lerp(position, new float[]{position[0], position[1] + voxDim[1], position[2]}, mu);
                     }
-                    // top of the cube
+                    // top of the mc
                     if ((bits & 16) != 0) {
                         mu = (float) ((isoLevel - value4) / (value5 - value4));
                         vertList[4] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0] + voxDim[0], position[1], position[2] + voxDim[2]}, mu);
@@ -588,7 +588,7 @@ public class MarchingCubes {
                         mu = (float) ((isoLevel - value4) / (value6 - value4));
                         vertList[7] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0], position[1] + voxDim[1], position[2] + voxDim[2]}, mu);
                     }
-                    // vertical lines of the cube
+                    // vertical lines of the mc
                     if ((bits & 256) != 0) {
                         mu = (float) ((isoLevel - value0) / (value4 - value0));
                         vertList[8] = lerp(position, new float[]{position[0], position[1], position[2] + voxDim[2]}, mu);
@@ -651,7 +651,7 @@ public class MarchingCubes {
             for (int y = 0; y < volDim[1] - 1; y++) {
                 for (int x = 0; x < volDim[0] - 1; x++) {
 
-                    // Indices pointing to cube vertices
+                    // Indices pointing to mc vertices
                     //              pyz  ___________________  pxyz
                     //                  /|                 /|
                     //                 / |                / |
@@ -708,7 +708,7 @@ public class MarchingCubes {
                     // Interpolate the positions based od voxel intensities
                     float mu = 0.5f;
 
-                    // bottom of the cube
+                    // bottom of the mc
                     if ((bits & 1) != 0) {
                         mu = (float) ((isoLevel - value0) / (value1 - value0));
                         vertList[0] = lerp(position, new float[]{position[0] + voxDim[0], position[1], position[2]}, mu);
@@ -725,7 +725,7 @@ public class MarchingCubes {
                         mu = (float) ((isoLevel - value0) / (value2 - value0));
                         vertList[3] = lerp(position, new float[]{position[0], position[1] + voxDim[1], position[2]}, mu);
                     }
-                    // top of the cube
+                    // top of the mc
                     if ((bits & 16) != 0) {
                         mu = (float) ((isoLevel - value4) / (value5 - value4));
                         vertList[4] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0] + voxDim[0], position[1], position[2] + voxDim[2]}, mu);
@@ -742,7 +742,7 @@ public class MarchingCubes {
                         mu = (float) ((isoLevel - value4) / (value6 - value4));
                         vertList[7] = lerp(new float[]{position[0], position[1], position[2] + voxDim[2]}, new float[]{position[0], position[1] + voxDim[1], position[2] + voxDim[2]}, mu);
                     }
-                    // vertical lines of the cube
+                    // vertical lines of the mc
                     if ((bits & 256) != 0) {
                         mu = (float) ((isoLevel - value0) / (value4 - value0));
                         vertList[8] = lerp(position, new float[]{position[0], position[1], position[2] + voxDim[2]}, mu);

@@ -22,9 +22,20 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+
+		<artemis.version>2.1.0</artemis.version>
+		<artemis.optimizeSystems>false</artemis.optimizeSystems>
+		<artemis.enableArtemisPlugin>false</artemis.enableArtemisPlugin>
+
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${artemis.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.fxyz3d</groupId>
@@ -55,11 +66,37 @@
 		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>fast</id>
+			<properties>
+				<artemis.optimizeSystems>true</artemis.optimizeSystems>
+				<artemis.enableArtemisPlugin>true</artemis.enableArtemisPlugin>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>net.onedaybeard.artemis</groupId>
+				<artifactId>artemis-odb-maven-plugin</artifactId>
+				<version>${artemis.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>artemis</goal>
+						</goals>
+						<configuration>
+							<optimizeEntitySystems>${artemis.optimizeSystems}</optimizeEntitySystems>
+							<enableArtemisPlugin>${artemis.enableArtemisPlugin}</enableArtemisPlugin>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

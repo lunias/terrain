@@ -2,9 +2,11 @@ package com.ethanaa.terrain;
 
 import javafx.application.Application;
 import javafx.scene.*;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -25,8 +27,6 @@ public class TerrainApplication extends Application implements CommandLineRunner
 
     private static final Logger LOG = LoggerFactory.getLogger(TerrainApplication.class);
 
-    private static final double MODEL_X_OFFSET = 0d;
-    private static final double MODEL_Y_OFFSET = 0d;
     private static final double ZOOM_FACTOR = 2.5d;
     private static final double PAN_FACTOR = 100d;
     private static final int VIEWPORT_SIZE = 1024;
@@ -41,7 +41,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         LOG.info("Welcome to terrain");
     }
@@ -76,8 +76,8 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 MeshView meshView = terrainGenerator.genMeshView(
                         new float[]{xMin, xMax}, new float[]{yMin, yMax}, new float[]{zMin, zMax}, 200f, size);
 
-                meshView.setLayoutX(xOffset * size + size / 2);
-                meshView.setLayoutY(yOffset * size + size / 2);
+                meshView.setLayoutX(xOffset * size + size / 2d);
+                meshView.setLayoutY(yOffset * size + size / 2d);
 
                 AmbientLight meshLight = new AmbientLight(Color.WHITE);
                 meshLight.getScope().add(meshView);
@@ -134,7 +134,7 @@ public class TerrainApplication extends Application implements CommandLineRunner
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         stage.setTitle("Terrain");
 
@@ -145,30 +145,40 @@ public class TerrainApplication extends Application implements CommandLineRunner
                 true, SceneAntialiasing.BALANCED);
         subScene.setFill(Color.INDIANRED);
 
-        Translate mapCameraPan = new Translate(0, 0, 0);
+        subScene.widthProperty().bind(stage.widthProperty().multiply(.8));
+        subScene.heightProperty().bind(stage.heightProperty());
+
+        Translate mapCameraPan = new Translate(1024 * 2.5 - 600, 1024 * 2.5 - 600, -10_000);
 
         Rotate mapCameraRx = new Rotate(0, Rotate.X_AXIS);
         Rotate mapCameraRy = new Rotate(0, Rotate.Y_AXIS);
         Rotate mapCameraRz = new Rotate(0, Rotate.Z_AXIS);
 
-        mapCameraRx.setPivotX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
-        mapCameraRx.setPivotY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
-        mapCameraRx.setPivotZ(VIEWPORT_SIZE / 2);
+        mapCameraRx.setPivotX(1024 * 2.5);
+        mapCameraRx.setPivotY(1024 * 2.5);
+        mapCameraRx.setPivotZ(0);
 
-        mapCameraRy.setPivotX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
-        mapCameraRy.setPivotY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
-        mapCameraRy.setPivotZ(VIEWPORT_SIZE / 2);
+        mapCameraRy.setPivotX(1024 * 2.5);
+        mapCameraRy.setPivotY(1024 * 2.5);
+        mapCameraRy.setPivotZ(0);
 
-        mapCameraRz.setPivotX(VIEWPORT_SIZE / 2 + MODEL_X_OFFSET);
-        mapCameraRz.setPivotY(VIEWPORT_SIZE / 2 + MODEL_Y_OFFSET);
-        mapCameraRz.setPivotZ(VIEWPORT_SIZE / 2);
+        mapCameraRz.setPivotX(1024 * 2.5);
+        mapCameraRz.setPivotY(1024 * 2.5);
+        mapCameraRz.setPivotZ(0);
 
         PerspectiveCamera mapCamera = new PerspectiveCamera(false);
         mapCamera.getTransforms().addAll(mapCameraRx, mapCameraRy, mapCameraRz, mapCameraPan);
 
         subScene.setCamera(mapCamera);
 
+        VBox controls = new VBox();
+        controls.setPrefWidth(800);
+
+        controls.getChildren().add(new Label("Hi"));
+        controls.setStyle("-fx-background-color: #7678ED");
+
         BorderPane root = new BorderPane(subScene);
+        root.setRight(controls);
 
         Scene scene = new Scene(root);
 

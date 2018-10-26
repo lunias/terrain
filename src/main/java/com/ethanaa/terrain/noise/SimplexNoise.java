@@ -17,6 +17,8 @@ package com.ethanaa.terrain.noise;
  *
  */
 
+import java.util.Random;
+
 public class SimplexNoise {  // Simplex noise in 2D, 3D and 4D
     private static Grad grad3[] = {new Grad(1,1,0),new Grad(-1,1,0),new Grad(1,-1,0),new Grad(-1,-1,0),
             new Grad(1,0,1),new Grad(-1,0,1),new Grad(1,0,-1),new Grad(-1,0,-1),
@@ -48,6 +50,9 @@ public class SimplexNoise {  // Simplex noise in 2D, 3D and 4D
     private static short perm[] = new short[512];
     private static short permMod12[] = new short[512];
     static {
+
+        shuffleArray(p, System.nanoTime());
+
         for(int i=0; i<512; i++)
         {
             perm[i]=p[i & 255];
@@ -353,6 +358,22 @@ public class SimplexNoise {  // Simplex noise in 2D, 3D and 4D
             this.y = y;
             this.z = z;
             this.w = w;
+        }
+    }
+
+    private static void shuffleArray(short[] array, long seed) {
+
+        int index;
+        Random random = new Random(seed);
+
+        for (int i = array.length - 1; i > 0; i--) {
+
+            index = random.nextInt(i + 1);
+            if (index != i) {
+                array[index] ^= array[i];
+                array[i] ^= array[index];
+                array[index] ^= array[i];
+            }
         }
     }
 }
