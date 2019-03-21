@@ -28,11 +28,11 @@ public class TechHelp {
 
     private static final Map<String, Pattern> PATTERN_MAP = new TreeMap<String, Pattern>() {
         {
-            put("help_with", Pattern.compile(".*help with (?:my)? (.*)"));
+            put("help_with", Pattern.compile(".*help with (?:my )?(.*)"));
             put("help", Pattern.compile("help"));
-            put("fix_my", Pattern.compile(".*fix (?:my)? (.*)"));
+            put("fix_my", Pattern.compile(".*fix (?:my )?(.*)"));
             put("fix", Pattern.compile("fix"));
-            put("broken_item", Pattern.compile("(?:my)? (.+).*(?:is)?\\sbroken"));
+            put("broken_item", Pattern.compile("(?:my )?(.*?) (?:is)?.*broken"));
             put("broken", Pattern.compile("broken"));
             put("can_you_help", Pattern.compile(".*help with (.*)\\?$"));
             put("greeting", Pattern.compile("hello|hi|sup|yo"));
@@ -46,7 +46,7 @@ public class TechHelp {
             if (matcher.matches()) {
                 intent = entry.getKey();
                 for (int i = 0; i < matcher.groupCount(); i++) {
-                    intent += ("\n  match #" + i + ": " + matcher.group(i + 1));
+                    intent += ("\n  match #" + i + ": " + matcher.group(i + 1).trim());
                 }
                 return intent;
             }
