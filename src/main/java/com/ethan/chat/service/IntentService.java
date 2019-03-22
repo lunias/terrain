@@ -41,6 +41,10 @@ public class IntentService {
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead|dying|ripped|ripping)")));
             put("damaged", new Intent("damaged",
                     Pattern.compile("(.*)(?:damaged|destroyed|dead|dying|ripped|ripping)(.*)")));
+            put("performance_item", new Intent("performance_item",
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin)")));
+            put("performance", new Intent("performance",
+                    Pattern.compile("(.*)(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin)(.*)")));
             put("not_working_item", new Intent("not_working_item",
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)).+(?:working|work)")));
             put("not_working", new Intent("not_working",
@@ -61,6 +65,8 @@ public class IntentService {
                     Pattern.compile("(.*)error(.*)")));
             put("geek_squad", new Intent("geek_squad",
                     Pattern.compile("(.*)geek\\s?squad(.*)")));
+            put("request", new Intent("request",
+                    Pattern.compile("(.*)(?:need|needing|wanting|want)(.*)")));
             put("generic_item_help", new Intent("generic_item_help",
                     Pattern.compile("(.*)(?:my)(.*)")));
             put("yes", new Intent("yes",
@@ -91,11 +97,14 @@ public class IntentService {
                 for (int i = 0; i < matcher.groupCount(); i++) {
                     String group = matcher.group(i + 1);
                     if (group != null) {
-                        entry.getValue().addGroup(group.trim()
+                        group = group.trim()
                                 .replaceFirst("^my", "")
                                 .replaceFirst("^s\\s", "")
                                 .replaceFirst("is$", "")
-                        .trim());
+                                .trim();
+                        if (!group.isEmpty()) {
+                            entry.getValue().addGroup(group);
+                        }
                     }
                 }
                 return entry.getValue();
