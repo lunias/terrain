@@ -25,18 +25,22 @@ public class IntentService {
                     Pattern.compile(".*(?:fix|repair)\\s(?:my\\s)?(.*)")));
             put("fix", new Intent("fix",
                     Pattern.compile("(.*)(?:fix|repair)(.*)")));
+            put("replace_item", new Intent("replace_item",
+                    Pattern.compile(".*(?:replace|replacement)\\s(?:my\\s)?(.*)")));
+            put("replace", new Intent("replace",
+                    Pattern.compile("(.*)(?:replace|replacement)(.*)")));
             put("problem_item", new Intent("problem_item",
-                    Pattern.compile("(.*)(?:problem|issue)(:?is\\s)?\\s?(:with\\s)?(?:my\\s)?.*(\\s.+)")));
+                    Pattern.compile("(.*)(?:problem|issue)(:?is\\s)?\\s?(:with\\s)?(?:my\\s)?(\\s.+)")));
             put("problem", new Intent("problem",
                     Pattern.compile("(.*)(?:problem|issue)(.*)")));
             put("broken_item", new Intent("broken_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:broken|broke)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:broken|broke|malfunctioning|malfunction)")));
             put("broken", new Intent("broken",
-                    Pattern.compile("(.*)(broken|broke)(.*)")));
+                    Pattern.compile("(.*)(broken|broke|malfunctioning|malfunction)(.*)")));
             put("damaged_item", new Intent("damaged_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead|dying)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead|dying|ripped|ripping)")));
             put("damaged", new Intent("damaged",
-                    Pattern.compile("(.*)(?:damaged|destroyed|dead|dying)(.*)")));
+                    Pattern.compile("(.*)(?:damaged|destroyed|dead|dying|ripped|ripping)(.*)")));
             put("not_working_item", new Intent("not_working_item",
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)).+(?:working|work)")));
             put("not_working", new Intent("not_working",
@@ -66,7 +70,7 @@ public class IntentService {
             put("greeting", new Intent("greeting",
                     Pattern.compile("hello|hey|hi|sup|yo|holla")));
             put("insult", new Intent("insult",
-                    Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch)(.*)")));
+                    Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch|sucks)(.*)")));
             put("fallback", new Intent("fallback",
                     Pattern.compile("(.*)")));
         }
@@ -90,7 +94,8 @@ public class IntentService {
                         entry.getValue().addGroup(group.trim()
                                 .replaceFirst("^my", "")
                                 .replaceFirst("^s\\s", "")
-                                .replaceFirst("is$", ""));
+                                .replaceFirst("is$", "")
+                        .trim());
                     }
                 }
                 return entry.getValue();
