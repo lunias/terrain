@@ -25,14 +25,18 @@ public class IntentService {
                     Pattern.compile(".*(?:fix|repair)\\s(?:my\\s)?(.*)")));
             put("fix", new Intent("fix",
                     Pattern.compile("(.*)(?:fix|repair)(.*)")));
+            put("problem_item", new Intent("problem_item",
+                    Pattern.compile("(.*)(?:problem|issue)(:?is\\s)?\\s?(:with\\s)?(?:my\\s)?.*(\\s.+)")));
+            put("problem", new Intent("problem",
+                    Pattern.compile("(.*)(?:problem|issue)(.*)")));
             put("broken_item", new Intent("broken_item",
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:broken|broke)")));
             put("broken", new Intent("broken",
                     Pattern.compile("(.*)(broken|broke)(.*)")));
             put("damaged_item", new Intent("damaged_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead|dying)")));
             put("damaged", new Intent("damaged",
-                    Pattern.compile("(.*)(?:damaged|destroyed|dead)(.*)")));
+                    Pattern.compile("(.*)(?:damaged|destroyed|dead|dying)(.*)")));
             put("not_working_item", new Intent("not_working_item",
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)).+(?:working|work)")));
             put("not_working", new Intent("not_working",
@@ -41,6 +45,10 @@ public class IntentService {
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\son|turn\\son)")));
             put("not_turning_on", new Intent("not_turning_on",
                     Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\son|turn\\son)")));
+            put("not_turning_off_item", new Intent("not_turning_off_item",
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\soff|turn\\soff)")));
+            put("not_turning_off", new Intent("not_turning_off",
+                    Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\soff|turn\\soff)")));
             put("cannot_do", new Intent("cannot_do",
                     Pattern.compile("(?:my\\s)?(.*?)(?:(?:can'?t|cannot|can\\snot)|(?:doesn'?t|didn't|does\\snot)|(?:won'?t|will\\snot))(.*)")));
             put("showing_error", new Intent("showing_error",
@@ -57,6 +65,8 @@ public class IntentService {
                     Pattern.compile("no|na|nah|nope|negative")));
             put("greeting", new Intent("greeting",
                     Pattern.compile("hello|hey|hi|sup|yo|holla")));
+            put("insult", new Intent("insult",
+                    Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch)(.*)")));
             put("fallback", new Intent("fallback",
                     Pattern.compile("(.*)")));
         }
