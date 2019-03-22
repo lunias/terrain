@@ -13,6 +13,8 @@ public class IntentService {
 
     private static final Map<String, Intent> INTENT_MAP = new LinkedHashMap<String, Intent>() {
         {
+            put("virus", new Intent("virus",
+                    Pattern.compile("(.*)(?:virus|viruses|malware|spyware|hacked)(.*)")));
             put("can_you_help", new Intent("can_you_help",
                     Pattern.compile(".*help\\swith(.*)\\?$")));
             put("help_with", new Intent("help_with",
