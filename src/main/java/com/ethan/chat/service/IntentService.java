@@ -42,9 +42,9 @@ public class IntentService {
             put("broken", new Intent("broken",
                     Pattern.compile("(.*)(broken|broke|malfunctioning|malfunction)(.*)")));
             put("damaged_item", new Intent("damaged_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead|dying|ripped|ripping)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:damaged|destroyed|dead|dying|ripped|ripping|crushed|cracking|cracked)")));
             put("damaged", new Intent("damaged",
-                    Pattern.compile("(.*)(?:damaged|destroyed|dead|dying|ripped|ripping)(.*)")));
+                    Pattern.compile("(.*)(?:damaged|destroyed|dead|dying|ripped|ripping|crushed|cracking|cracked)(.*)")));
             put("performance_item", new Intent("performance_item",
                     Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin|dropping|drop|skipping|skip)")));
             put("performance", new Intent("performance",
@@ -71,12 +71,12 @@ public class IntentService {
                     Pattern.compile("(.*)geek\\s?squad(.*)")));
             put("request", new Intent("request",
                     Pattern.compile("(.*)(?:need|needing|wanting|want|wanna|how|call|can)(.*)")));
-            put("generic_item_help", new Intent("generic_item_help",
-                    Pattern.compile("(.*)(?:my|the)(.*)")));
             put("yes", new Intent("yes",
                     Pattern.compile("yes|ya|yeah|sure|ok(?:ay)?|yup|yep|yessir|affirmative|cool|dope")));
             put("no", new Intent("no",
                     Pattern.compile("(?:no|na|nah|nope|negative)(.*)")));
+            put("generic_item_help", new Intent("generic_item_help",
+                    Pattern.compile("(.*)(?:my|the)(.*)")));
             put("greeting", new Intent("greeting",
                     Pattern.compile("(?:hello|hey|hi|sup|yo|holla)(.*)")));
             put("insult", new Intent("insult",
