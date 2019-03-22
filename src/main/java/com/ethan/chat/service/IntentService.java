@@ -46,7 +46,7 @@ public class IntentService {
             put("damaged", new Intent("damaged",
                     Pattern.compile("(.*)(?:damaged|destroyed|dead|dying|ripped|ripping|crushed|cracking|cracked)(.*)")));
             put("performance_item", new Intent("performance_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin|dropping|drop|skipping|skip)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin|dropping|drop|skipping|skip|lagging|lag)")));
             put("performance", new Intent("performance",
                     Pattern.compile("(.*)(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin|dropping|drop|skipping|skip)(.*)")));
             put("not_working_item", new Intent("not_working_item",
