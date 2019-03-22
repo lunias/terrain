@@ -70,7 +70,7 @@ public class IntentService {
             put("geek_squad", new Intent("geek_squad",
                     Pattern.compile("(.*)geek\\s?squad(.*)")));
             put("request", new Intent("request",
-                    Pattern.compile("(.*)(?:need|needing|wanting|want|wanna|how|call|can)(.*)")));
+                    Pattern.compile("(.*)(?:need|needing|wanting|want|wanna|how|call|can|what)(.*)")));
             put("yes", new Intent("yes",
                     Pattern.compile("yes|ya|yeah|sure|ok(?:ay)?|yup|yep|yessir|affirmative|cool|dope")));
             put("no", new Intent("no",
