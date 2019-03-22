@@ -54,13 +54,13 @@ public class IntentService {
             put("not_working", new Intent("not_working",
                     Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)).+(?:working|work)")));
             put("not_turning_on_item", new Intent("not_turning_on_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\son|turn\\son)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:(?:turn|com|power)ing\\son|(?:turn|come|power)\\son)")));
             put("not_turning_on", new Intent("not_turning_on",
-                    Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\son|turn\\son)")));
+                    Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:(?:turn|com|power)ing\\son|(?:turn|com|power)\\son)")));
             put("not_turning_off_item", new Intent("not_turning_off_item",
-                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\soff|turn\\soff)")));
+                    Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:(?:turn|go|power)ing\\soff|(?:turns|turn|goes|go|powers|power)\\soff)")));
             put("not_turning_off", new Intent("not_turning_off",
-                    Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:turning\\soff|turn\\soff)")));
+                    Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:(?:turn|go|power)ing\\soff|(?:turns|turn|goes|go|powers|power)\\soff)")));
             put("cannot_do", new Intent("cannot_do",
                     Pattern.compile("(?:my\\s)?(.*?)(?:(?:can'?t|cannot|can\\snot)|(?:doesn'?t|didn't|does\\snot)|(?:won'?t|will\\snot))(.*)")));
             put("showing_error", new Intent("showing_error",
