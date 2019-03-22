@@ -70,7 +70,7 @@ public class IntentService {
             put("greeting", new Intent("greeting",
                     Pattern.compile("hello|hey|hi|sup|yo|holla")));
             put("insult", new Intent("insult",
-                    Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch|sucks)(.*)")));
+                    Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch|sucks|dick|cock)(.*)")));
             put("fallback", new Intent("fallback",
                     Pattern.compile("(.*)")));
         }
