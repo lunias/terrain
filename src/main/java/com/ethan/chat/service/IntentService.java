@@ -29,6 +29,10 @@ public class IntentService {
                     Pattern.compile(".*(?:replace|replacement)\\s(?:my\\s)?(.*)")));
             put("replace", new Intent("replace",
                     Pattern.compile("(.*)(?:replace|replacement)(.*)")));
+            put("return_item", new Intent("return_item",
+                    Pattern.compile(".*(?:return|returning)\\s(?:my\\s)?(.*)")));
+            put("return", new Intent("return",
+                    Pattern.compile("(.*)(?:return|returning)(.*)")));
             put("problem_item", new Intent("problem_item",
                     Pattern.compile("(.*)(?:problem|issue)(:?is\\s)?\\s?(:with\\s)?(?:my\\s)?(\\s.+)")));
             put("problem", new Intent("problem",
@@ -66,15 +70,15 @@ public class IntentService {
             put("geek_squad", new Intent("geek_squad",
                     Pattern.compile("(.*)geek\\s?squad(.*)")));
             put("request", new Intent("request",
-                    Pattern.compile("(.*)(?:need|needing|wanting|want|how)(.*)")));
+                    Pattern.compile("(.*)(?:need|needing|wanting|want|wanna|how|call|can)(.*)")));
             put("generic_item_help", new Intent("generic_item_help",
                     Pattern.compile("(.*)(?:my)(.*)")));
             put("yes", new Intent("yes",
                     Pattern.compile("yes|ya|yeah|sure|ok(?:ay)?|yup|yep|yessir|affirmative")));
             put("no", new Intent("no",
-                    Pattern.compile("no|na|nah|nope|negative")));
+                    Pattern.compile("(?:no|na|nah|nope|negative)(.*)")));
             put("greeting", new Intent("greeting",
-                    Pattern.compile("hello|hey|hi|sup|yo|holla")));
+                    Pattern.compile("(?:hello|hey|hi|sup|yo|holla)(.*)")));
             put("insult", new Intent("insult",
                     Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch|sucks|dick|cock)(.*)")));
             put("fallback", new Intent("fallback",
