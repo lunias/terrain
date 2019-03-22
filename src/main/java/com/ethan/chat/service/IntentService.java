@@ -74,7 +74,7 @@ public class IntentService {
             put("yes", new Intent("yes",
                     Pattern.compile("yes|ya|yeah|sure|ok(?:ay)?|yup|yep|yessir|affirmative|cool|dope")));
             put("no", new Intent("no",
-                    Pattern.compile("(?:no|na|nah|nope|negative)(.*)")));
+                    Pattern.compile("(?:no|nah|na|nope|negative)(.*)")));
             put("generic_item_help", new Intent("generic_item_help",
                     Pattern.compile("(.*)(?:my|the)(.*)")));
             put("greeting", new Intent("greeting",
