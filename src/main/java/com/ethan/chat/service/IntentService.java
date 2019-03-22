@@ -66,7 +66,7 @@ public class IntentService {
             put("geek_squad", new Intent("geek_squad",
                     Pattern.compile("(.*)geek\\s?squad(.*)")));
             put("request", new Intent("request",
-                    Pattern.compile("(.*)(?:need|needing|wanting|want)(.*)")));
+                    Pattern.compile("(.*)(?:need|needing|wanting|want|how)(.*)")));
             put("generic_item_help", new Intent("generic_item_help",
                     Pattern.compile("(.*)(?:my)(.*)")));
             put("yes", new Intent("yes",
