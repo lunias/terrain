@@ -1,6 +1,5 @@
 package com.ethanaa.terrain;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -34,6 +33,8 @@ public class TechHelp {
             put("fix", Pattern.compile("fix"));
             put("broken_item", Pattern.compile("(?:my )?(.*?) (?:is)?.*broken"));
             put("broken", Pattern.compile("broken"));
+            put("not_working_item", Pattern.compile("(?:my )?(.*?) (?:is not|isn't)?.*working"));
+            put("not_working", Pattern.compile("not working"));
             put("can_you_help", Pattern.compile(".*help with (.*)\\?$"));
             put("greeting", Pattern.compile("hello|hi|sup|yo"));
         }
