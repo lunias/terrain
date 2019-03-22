@@ -20,15 +20,15 @@ public class IntentService {
             put("help", new Intent("help",
                     Pattern.compile("(.*)help(.*)")));
             put("can_you_fix_item", new Intent("can_you_fix_item",
-                    Pattern.compile(".*(?:fix|repair)\\s(?:my\\s)?(.*)\\?$")));
+                    Pattern.compile(".*(?:fixing|fix|repairing|repair)\\s(?:my\\s)?(.*)\\?$")));
             put("fix_item", new Intent("fix_item",
-                    Pattern.compile(".*(?:fix|repair)\\s(?:my\\s)?(.*)")));
+                    Pattern.compile(".*(?:fixing|fix|repairing|repair)\\s(?:my\\s)?(.*)")));
             put("fix", new Intent("fix",
                     Pattern.compile("(.*)(?:fix|repair)(.*)")));
             put("replace_item", new Intent("replace_item",
-                    Pattern.compile(".*(?:replace|replacement)\\s(?:my\\s)?(.*)")));
+                    Pattern.compile(".*(?:replacing|replace|replacement)\\s(?:my\\s)?(.*)")));
             put("replace", new Intent("replace",
-                    Pattern.compile("(.*)(?:replace|replacement)(.*)")));
+                    Pattern.compile("(.*)(?:replacing|replace|replacement)(.*)")));
             put("return_item", new Intent("return_item",
                     Pattern.compile(".*(?:return|returning)\\s(?:my\\s)?(.*)")));
             put("return", new Intent("return",
