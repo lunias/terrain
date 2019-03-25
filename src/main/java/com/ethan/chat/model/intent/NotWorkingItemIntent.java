@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class NotWorkingItemIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)).+(?:working|work)");
+            Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(?:is\\s)?.*(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot|stopped)).+(?:working|work)");
 
     public NotWorkingItemIntent() {
         super("item_not_working");

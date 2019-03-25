@@ -10,16 +10,22 @@ public abstract class Intent {
     private static final List<String> ITEMS = Arrays.asList(
             "computer", "router", "monitor", "screen", "printer",
             "laptop", "desktop", "tower", "phone", "wifi", "internet",
-            "tv", "television", "calculator", "cd", "tape", "disc");
+            "tv", "television", "calculator", "cd", "tape", "disc",
+            "thing", "pc", "vcr", "dvd player", "dvd", "player", "refrigerator",
+            "washing machine", "machine", "speakers", "speaker", "iphone",
+            "android", "mobile phone", "pixel", "galaxy note", "note", "galaxy",
+            "headphones", "headphone", "receiver", "display", "mouse", "keyboard",
+            "google home", "alexa", "google", "lights", "light", "dishwasher",
+            "cable", "modem", "chair", "playstation", "xbox 360", "xbox one", "xbox",
+            "ps4", "ps3", "ps2", "ps", "dreamcast", "nintendo switch", "switch",
+            "nintendo", "vita", "ds", "controller");
 
     private static final Map<GroupType, Pattern> GROUP_TYPE_PATTERNS = new LinkedHashMap<GroupType, Pattern>() {
         {
-            put(GroupType.ITEM, Pattern.compile("(?:" + String.join("|", ITEMS) + ")"));
+            put(GroupType.ITEM, Pattern.compile(".*(" + String.join("|", ITEMS) + ").*"));
             put(GroupType.LOCATION, Pattern.compile(".*(?:in|at|on|by|(?:to\\sthe))\\s(.*)"));
-            put(GroupType.PERSON, Pattern.compile("(dad|mon|sister|brother|aunt|friend|buddy|pal|guy|gal|boy|man|girl|woman|person)"));
-            put(GroupType.SUBJECT, Pattern.compile(""));
+            put(GroupType.PERSON, Pattern.compile(".*(dad|mon|sister|brother|aunt|friend|buddy|pal|guy|gal|boy|man|girl|woman|person).*"));
             put(GroupType.VERB, Pattern.compile("(.*)(?:p?ed|p?ing)"));
-            put(GroupType.ADJECTIVE, Pattern.compile(""));
             put(GroupType.ADVERB, Pattern.compile("(.*)(?:ly)"));
         }
     };
@@ -40,17 +46,17 @@ public abstract class Intent {
                 .trim();
     }
 
-    protected Function<String, GroupType> getGroupTypeExtractor() {
+    protected Function<String, List<GroupType>> getGroupTypeExtractor(List<String> words, List<Tag> tags) {
         return (groupValue) -> {
             for (Map.Entry<GroupType, Pattern> entry : GROUP_TYPE_PATTERNS.entrySet()) {
                 GroupType type = entry.getKey();
                 Pattern pattern = entry.getValue();
                 Matcher matcher = pattern.matcher(groupValue);
                 if (matcher.matches()) {
-                    return type;
+                    return Collections.singletonList(type);
                 }
             }
-            return GroupType.UNKNOWN;
+            return Collections.singletonList(GroupType.UNKNOWN);
         };
     }
 
@@ -62,11 +68,11 @@ public abstract class Intent {
         this.name = name;
     }
 
-    public IntentMatch matches(String utterance) {
+    public IntentMatch matches(String utterance, List<String> words, List<Tag> tags) {
 
         return new IntentMatch(getName(),
                 getPattern().matcher(utterance.trim()),
-                getGroupPostProcessor(), getGroupTypeExtractor());
+                getGroupPostProcessor(), getGroupTypeExtractor(words, tags));
     }
 
     @Override
@@ -101,7 +107,7 @@ public abstract class Intent {
         protected IntentMatch(String intentName,
                               Matcher matcher,
                               Function<String, String> groupPostProcessor,
-                              Function<String, GroupType> groupTypeExtractor) {
+                              Function<String, List<GroupType>> groupTypeExtractor) {
 
             this.matches = matcher.matches();
             if (this.matches) {

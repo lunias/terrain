@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class RequestIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(?:need|needing|wanting|want|wanna|how|call|can|what)(.*)");
+            Pattern.compile("(.*)(?:need|needing|wanting|want|wanna|how|call|can|what(?!\\si\\ssa))(.*)");
 
     public RequestIntent() {
         super("request");

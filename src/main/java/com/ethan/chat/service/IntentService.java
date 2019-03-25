@@ -1,15 +1,15 @@
 package com.ethan.chat.service;
 
 import com.ethan.chat.model.Intent;
+import com.ethan.chat.model.Tag;
 import com.ethan.chat.model.intent.*;
+import com.knowledgebooks.nlp.util.Tokenizer;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static com.knowledgebooks.nlp.fasttag.FastTag.tag;
 
 @Service
 public class IntentService {
@@ -52,9 +52,13 @@ public class IntentService {
             add(new RequestIntent());
             add(new YesIntent());
             add(new NoIntent());
+            add(new ProvidingInfoIntent());
             add(new GenericItemHelpIntent());
             add(new ClosingIntent());
+            add(new MisunderstandingIntent());
+            add(new RepeatIntent());
             add(new GreetingIntent());
+            add(new ThanksIntent());
             add(new InsultIntent());
             add(new FallbackIntent());
         }
@@ -66,9 +70,17 @@ public class IntentService {
 
     public static List<Intent.IntentMatch> detectIntents(String utterance) {
 
+        List<String> words = Tokenizer.wordsToList(utterance);
+        List<Tag> tags = Tag.parse(tag(words));
+
+        System.out.println(":: Parts of Speech ::");
+        for (int i = 0; i < words.size(); i++) {
+            System.out.println(words.get(i) + " = " + tags.get(i));
+        }
+
         List<Intent.IntentMatch> matches = new ArrayList<>();
         for (int i = 0; i < PRIORITIZED_INTENTS.size(); i++) {
-            Intent.IntentMatch match = PRIORITIZED_INTENTS.get(i).matches(utterance);
+            Intent.IntentMatch match = PRIORITIZED_INTENTS.get(i).matches(utterance, words, tags);
             if (match.matches()) {
                 matches.add(match);
             }

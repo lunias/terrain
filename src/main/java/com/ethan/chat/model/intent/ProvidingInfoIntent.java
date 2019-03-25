@@ -4,13 +4,13 @@ import com.ethan.chat.model.Intent;
 
 import java.util.regex.Pattern;
 
-public class GreetingIntent extends Intent {
+public class ProvidingInfoIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(?:hello|hey|hi|sup|yo(?!u)|holla|good)(.*)");
+            Pattern.compile("(.*)(?:my|the)\\s?(.*)(address|(phone|cell|work|mobile|office)?\\s?number)(.*)");
 
-    public GreetingIntent() {
-        super("greeting");
+    public ProvidingInfoIntent() {
+        super("providing_info");
     }
 
     @Override

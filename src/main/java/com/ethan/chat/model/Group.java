@@ -1,34 +1,31 @@
 package com.ethan.chat.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Group {
 
-    private GroupType type;
+    private List<GroupType> types;
     private String value;
     private Set<GroupTag> tags;
 
-    public Group(GroupType type, String value, Collection<GroupTag> groupTags) {
+    public Group(List<GroupType> types, String value, Collection<GroupTag> groupTags) {
 
-        this.type = type;
+        this.types = types;
         this.value = value;
         this.tags = new HashSet<>(groupTags);
     }
 
-    public Group(GroupType type, String value) {
+    public Group(List<GroupType> types, String value) {
 
-        this(type, value, new HashSet<>());
+        this(types, value, new HashSet<>());
     }
 
-    public GroupType getType() {
-        return type;
+    public List<GroupType> getTypes() {
+        return types;
     }
 
-    public void setType(GroupType type) {
-        this.type = type;
+    public void setTypes(List<GroupType> types) {
+        this.types = types;
     }
 
     public String getValue() {
@@ -58,14 +55,14 @@ public class Group {
 
         Group group = (Group) o;
 
-        if (type != group.type) return false;
-        if (!Objects.equals(value, group.value)) return false;
-        return Objects.equals(tags, group.tags);
+        if (types != null ? !types.equals(group.types) : group.types != null) return false;
+        if (value != null ? !value.equals(group.value) : group.value != null) return false;
+        return tags != null ? tags.equals(group.tags) : group.tags == null;
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
+        int result = types != null ? types.hashCode() : 0;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         return result;
@@ -73,10 +70,10 @@ public class Group {
 
     @Override
     public String toString() {
-        return "Group{" +
-                "type=" + type +
-                ", value='" + value + '\'' +
-                ", tags=" + tags +
-                '}';
+        return new StringJoiner(", ", Group.class.getSimpleName() + "[", "]")
+                .add("types=" + types)
+                .add("value='" + value + "'")
+                .add("tags=" + tags)
+                .toString();
     }
 }

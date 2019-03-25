@@ -3,8 +3,6 @@ package com.ethan.chat;
 import com.ethan.chat.model.Intent;
 import com.ethan.chat.service.IntentService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,6 +19,7 @@ public class TechHelp {
                 break;
             } else {
                 List<Intent.IntentMatch> matches = IntentService.detectIntents(message);
+                System.out.println("\n:: Matches ::");
                 for (Intent.IntentMatch match : matches) {
                     System.out.println("Intent: " + match);
                 }
