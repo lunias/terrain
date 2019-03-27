@@ -21,7 +21,8 @@ public class WordService {
             "cable", "modem", "chair", "playstation", "xbox 360", "xbox one", "xbox",
             "ps4", "ps3", "ps2", "ps", "dreamcast", "nintendo switch", "switch",
             "nintendo", "vita", "ds", "controller", "toothbrush", "ipad", "tablet",
-            "mac", "macintosh", "watch", "smart watch"));
+            "mac", "macintosh", "watch", "smart watch", "battery", "remote", "ram",
+            "hard drive", "hdd", "ssd", "cpu"));
 
     private static final Set<String> PEOPLE = new HashSet<>(Arrays.asList(
             "mom", "mother", "dad", "father", "brother", "sister", "myself", "mine", "me", "i", "you",

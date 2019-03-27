@@ -15,6 +15,7 @@ public class User {
     private String zip;
     private String phoneNumber;
     private Set<String> products = new LinkedHashSet<>();
+    private Set<String> software = new LinkedHashSet<>();
 
     public User() {
         this("fallback");
@@ -63,6 +64,8 @@ public class User {
                 this.zip = parameter.getValue();
             } else if (types.contains(ParameterType.PRODUCT)) {
                 this.products.add(parameter.getValue());
+            } else if (types.contains(ParameterType.SOFTWARE)) {
+                this.software.add(parameter.getValue());
             }
         }
         this.intentHistory.push(intentMatch);
@@ -108,17 +111,27 @@ public class User {
         this.products = products;
     }
 
+    public Set<String> getSoftware() {
+        return software;
+    }
+
+    public void setSoftware(Set<String> software) {
+        this.software = software;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "confusion=" + confusion +
                 ", frustration=" + frustration +
                 ", goalIntentName='" + goalIntentName + '\'' +
-                ", intentHistory=" + intentHistory +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", zip='" + zip + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", products=" + products +
+                ", software=" + software +
+                ", intentHistory=" + intentHistory +
                 '}';
     }
 }

@@ -44,7 +44,7 @@ public class TechHelp {
                     user.addIntentHistory(firstMatch);
 
                     System.out.println("User: " + user + "\n");
-                    System.out.println("Response: " + firstMatch.respond(user) + "\n");
+                    System.out.println((char)27 + "[33m" + "Response: " + firstMatch.respond(user) + (char)27 + "[0m" + "\n");
                 }
             }
         }

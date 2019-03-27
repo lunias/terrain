@@ -76554,7 +76554,7 @@ rallied VBD VBN
 rallies NNS VBZ
 rally NN VBP VB
 rallying VBG JJ NN
-ram VB NN
+ram NN VB
 ramble VB VBP
 rambled VBD
 rambles VBZ
@@ -77936,8 +77936,8 @@ remora NNS
 remorse NN
 remorseful JJ
 remorseless JJ
-remote JJ
-remote-control JJ
+remote NN JJ
+remote-control NN JJ
 remote-controlled JJ
 remote-site NN
 remotely RB
