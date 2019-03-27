@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class InsultIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch|sucks|suck|dick|cock|loser|idiot)(.*)");
+            Pattern.compile("(.*)(dumb|stupid|shit|fuck|ass|piss|bitch|sucks|suck|dick|cock|loser|idiot|buzz\\s?off)(.*)");
 
     public InsultIntent() {
         super("insult");
