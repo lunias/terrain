@@ -23,6 +23,7 @@ public class FallbackIntent extends Intent {
     @Override
     public Function<User, String> respond() {
         return (user) -> {
+            user.setConfusion(user.getConfusion() + 1);
             return "I'm sorry. I couldn't understand that request.";
         };
     }

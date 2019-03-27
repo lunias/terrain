@@ -23,6 +23,7 @@ public class ThanksIntent extends Intent {
     @Override
     public Function<User, String> respond() {
         return (user) -> {
+            user.setFrustration(user.getFrustration() - 5);
             return "You're welcome.";
         };
     }

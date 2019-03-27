@@ -23,6 +23,7 @@ public class InsultIntent extends Intent {
     @Override
     public Function<User, String> respond() {
         return (user) -> {
+            user.setFrustration(user.getFrustration() + 5);
             return "That's not very nice. I'm here to help.";
         };
     }

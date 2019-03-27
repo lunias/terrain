@@ -29,7 +29,7 @@ public class GenericItemHelpIntent extends Intent {
                 Iterator<String> productIterator = new LinkedList<>(user.getProducts()).descendingIterator();
                 if (productIterator.hasNext()) {
                     String product = productIterator.next();
-                    return "Let me see what I can find on the topic of '" + product + "'";
+                    return "Let me see what I can find on the topic of '" + product + "'.";
                 }
             }
             return "Which item do you require help with?";

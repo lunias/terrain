@@ -26,6 +26,7 @@ public class RepeatIntent extends Intent {
     @Override
     public Function<User, String> respond() {
         return (user) -> {
+            user.setConfusion(user.getConfusion() + 1);
             Iterator<IntentMatch> parameters = user.getIntentHistory().iterator();
             for (int i = 0; parameters.hasNext() && i < 2; i++) {
                 IntentMatch intentMatch = parameters.next();

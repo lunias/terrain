@@ -43,8 +43,8 @@ public class TechHelp {
                     user.setGoalIntentName(firstMatch.getIntent());
                     user.addIntentHistory(firstMatch);
 
-                    System.out.println("User: " + user + "\n");
                     System.out.println((char)27 + "[33m" + "Response: " + firstMatch.respond(user) + (char)27 + "[0m" + "\n");
+                    System.out.println("User: " + user + "\n");
                 }
             }
         }
