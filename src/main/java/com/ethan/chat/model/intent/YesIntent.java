@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class YesIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("yes|ya|yeah|sure|ok(?:ay)?|yup|yep|yessir|affirmative|cool|dope|sweet");
+            Pattern.compile("yes|ye?ah?|sure|ok(?:ay)?|yup|yep|yessir|affirmative|cool|dope|sweet");
 
     public YesIntent() {
         super("yes");

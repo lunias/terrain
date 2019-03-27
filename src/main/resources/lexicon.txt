@@ -2499,6 +2499,7 @@ BBB NNP
 BBC NNP
 BBDO NNP
 BBN NNP
+BBY NNP
 BCA NNP
 BCD NNP
 BCE NNP
@@ -3617,6 +3618,7 @@ Besset NNP
 Bessie NNP
 Bessie\/Harper NNP
 Best JJS NNP RBS|JJS RBS
+BestBuy NNP
 Bester NNP
 Bestimmung FW
 Bet NNP

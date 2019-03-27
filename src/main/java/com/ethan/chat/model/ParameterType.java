@@ -4,6 +4,7 @@ public enum ParameterType {
 
     PHONE_NUMBER,
     ADDRESS,
+    ZIP,
     PRODUCT,
     PRODUCT_OTHER,
     SOFTWARE,

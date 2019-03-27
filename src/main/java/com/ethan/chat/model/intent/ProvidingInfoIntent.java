@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class ProvidingInfoIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(?:my|the)\\s?(.*)(address|(phone|cell|work|mobile|office)?\\s?number)(.*)");
+            Pattern.compile("(.*)(?:my|the)\\s?(.*)(name|address|zip\\s?(?:code)?|(phone|cell|work|mobile|office)?\\s?number)(.*)");
 
     public ProvidingInfoIntent() {
         super("providing_info");

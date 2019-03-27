@@ -9,6 +9,12 @@ import java.util.regex.Pattern;
 
 public abstract class Intent {
 
+    private static final Pattern PHONE_NUMBER_PATT =
+            Pattern.compile(".*((\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}).*");
+
+    private static final Pattern ZIP_PATT =
+            Pattern.compile(".*\\b(\\d{5}(?:[-\\s]\\d{4})?)\\b.*");
+
     private String name;
     private WordService wordService;
 
@@ -19,6 +25,10 @@ public abstract class Intent {
     }
 
     public abstract Pattern getPattern();
+
+    public Function<User, String> respond() {
+        return (user) -> "Alright! Thanks for the information.";
+    }
 
     protected Function<String, String> getGroupPostProcessor() {
         return (groupValue) -> groupValue.trim()
@@ -128,6 +138,16 @@ public abstract class Intent {
                 params.add(new Parameter(location, ParameterType.LOCATION));
             }
 
+            Matcher phoneNumberMatcher = PHONE_NUMBER_PATT.matcher(groupValue);
+            if (phoneNumberMatcher.matches()) {
+                params.add(new Parameter(phoneNumberMatcher.group(1), ParameterType.PHONE_NUMBER));
+            }
+
+            Matcher zipMatcher = ZIP_PATT.matcher(groupValue);
+            if (zipMatcher.matches()) {
+                params.add(new Parameter(zipMatcher.group(1), ParameterType.ZIP));
+            }
+
             return params;
         };
     }
@@ -144,7 +164,8 @@ public abstract class Intent {
 
         return new IntentMatch(getName(),
                 getPattern().matcher(utterance.trim()),
-                getGroupPostProcessor(), getParameterExtractor(words, tags));
+                getGroupPostProcessor(), getParameterExtractor(words, tags),
+                respond());
     }
 
     @Override
@@ -175,11 +196,13 @@ public abstract class Intent {
         private boolean matches = false;
         private int groupCount = -1;
         private Set<Parameter> parameters = new TreeSet<>(Parameter::compareTo);
+        private Function<User, String> respond;
 
         protected IntentMatch(String intentName,
                               Matcher matcher,
                               Function<String, String> groupPostProcessor,
-                              Function<String, Set<Parameter>> parameterExtractor) {
+                              Function<String, Set<Parameter>> parameterExtractor,
+                              Function<User, String> respond) {
 
             this.matches = matcher.matches();
             if (this.matches) {
@@ -194,6 +217,7 @@ public abstract class Intent {
                         }
                     }
                 }
+                this.respond = respond;
             }
         }
 
@@ -211,6 +235,10 @@ public abstract class Intent {
 
         public Set<Parameter> getParameters() {
             return parameters;
+        }
+
+        public String respond(User user) {
+            return this.respond.apply(user);
         }
 
         @Override

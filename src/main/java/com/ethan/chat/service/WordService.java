@@ -21,7 +21,7 @@ public class WordService {
             "cable", "modem", "chair", "playstation", "xbox 360", "xbox one", "xbox",
             "ps4", "ps3", "ps2", "ps", "dreamcast", "nintendo switch", "switch",
             "nintendo", "vita", "ds", "controller", "toothbrush", "ipad", "tablet",
-            "mac"));
+            "mac", "macintosh", "watch", "smart watch"));
 
     private static final Set<String> PEOPLE = new HashSet<>(Arrays.asList(
             "mom", "mother", "dad", "father", "brother", "sister", "myself", "mine", "me", "i", "you",
@@ -31,7 +31,7 @@ public class WordService {
 
     private static final Set<String> SOFTWARE = new HashSet<>(Arrays.asList(
             "word", "microsoft word", "excel", "microsoft excel", "chrome", "google chrome", "firefox",
-            "mozilla firefox", "safari", "bestbuy.com", "ios", "android"));
+            "mozilla firefox", "safari", "bestbuy.com", "ios", "android", "apple"));
 
     public WordService() {
 
