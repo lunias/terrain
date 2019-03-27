@@ -51,6 +51,7 @@ public class IntentService {
             add(new DownloadIntent());
             add(new PasswordIntent());
             add(new RequestIntent());
+            add(new NoiseIntent());
             add(new YesIntent());
             add(new NoIntent());
             add(new ProvidingInfoIntent());
