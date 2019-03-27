@@ -1,5 +1,7 @@
 package com.ethan.chat.model;
 
+import com.ethan.chat.service.WordService;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -7,33 +9,13 @@ import java.util.regex.Pattern;
 
 public abstract class Intent {
 
-    private static final List<String> ITEMS = Arrays.asList(
-            "computer", "router", "monitor", "screen", "printer",
-            "laptop", "desktop", "tower", "phone", "wifi", "internet",
-            "tv", "television", "calculator", "cd", "tape", "disc",
-            "thing", "pc", "vcr", "dvd player", "dvd", "player", "refrigerator",
-            "washing machine", "machine", "speakers", "speaker", "iphone",
-            "android", "mobile phone", "pixel", "galaxy note", "note", "galaxy",
-            "headphones", "headphone", "receiver", "display", "mouse", "keyboard",
-            "google home", "alexa", "google", "lights", "light", "dishwasher",
-            "cable", "modem", "chair", "playstation", "xbox 360", "xbox one", "xbox",
-            "ps4", "ps3", "ps2", "ps", "dreamcast", "nintendo switch", "switch",
-            "nintendo", "vita", "ds", "controller");
-
-    private static final Map<GroupType, Pattern> GROUP_TYPE_PATTERNS = new LinkedHashMap<GroupType, Pattern>() {
-        {
-            put(GroupType.ITEM, Pattern.compile(".*(" + String.join("|", ITEMS) + ").*"));
-            put(GroupType.LOCATION, Pattern.compile(".*(?:in|at|on|by|(?:to\\sthe))\\s(.*)"));
-            put(GroupType.PERSON, Pattern.compile(".*(dad|mon|sister|brother|aunt|friend|buddy|pal|guy|gal|boy|man|girl|woman|person).*"));
-            put(GroupType.VERB, Pattern.compile("(.*)(?:p?ed|p?ing)"));
-            put(GroupType.ADVERB, Pattern.compile("(.*)(?:ly)"));
-        }
-    };
-
     private String name;
+    private WordService wordService;
 
     public Intent(String name) {
+
         this.name = name;
+        this.wordService = new WordService();
     }
 
     public abstract Pattern getPattern();
@@ -46,17 +28,107 @@ public abstract class Intent {
                 .trim();
     }
 
-    protected Function<String, List<GroupType>> getGroupTypeExtractor(List<String> words, List<Tag> tags) {
+    protected Function<String, Set<Parameter>> getParameterExtractor(List<String> words, List<Tag> tags) {
         return (groupValue) -> {
-            for (Map.Entry<GroupType, Pattern> entry : GROUP_TYPE_PATTERNS.entrySet()) {
-                GroupType type = entry.getKey();
-                Pattern pattern = entry.getValue();
-                Matcher matcher = pattern.matcher(groupValue);
-                if (matcher.matches()) {
-                    return Collections.singletonList(type);
+
+            Set<Parameter> params = new HashSet<>();
+
+            String firstNoun = null;
+            String firstVerb = null;
+            Set<String> people = new HashSet<>();
+            Set<String> otherProducts = new HashSet<>();
+            String software = null;
+            for (int i = 0; i < words.size(); i++) {
+                String word = words.get(i);
+                Tag tag = tags.get(i);
+
+                if (Tag.isNoun(tag) && wordService.hasSoftware(word)) {
+                    software = word;
+                }
+
+                if (firstNoun == null && Tag.isNoun(tag)) {
+                    if (wordService.hasProduct(word)) {
+                        firstNoun = word;
+                    }
+                } else if (Tag.isNoun(tag)) {
+                    if (wordService.hasProduct(word)) {
+                         otherProducts.add(word);
+                    }
+                }
+
+                if (Tag.isPronoun(tag) || Tag.isNoun(tag)) {
+                    if (wordService.hasPerson(word)) {
+                        people.add(word);
+                    }
+                }
+
+                if (firstVerb == null && Tag.isVerb(tag)) {
+                    firstVerb = word;
                 }
             }
-            return Collections.singletonList(GroupType.UNKNOWN);
+
+            if (software != null) {
+                params.add(new Parameter(software, ParameterType.SOFTWARE));
+            }
+
+            if (firstNoun != null) {
+                params.add(new Parameter(firstNoun, ParameterType.PRODUCT));
+            }
+
+            if (!otherProducts.isEmpty()) {
+                otherProducts.forEach(op -> params.add(new Parameter(op, ParameterType.PRODUCT_OTHER)));
+            }
+
+            if (!people.isEmpty()) {
+                people.forEach(p -> params.add(new Parameter(p, ParameterType.PERSON)));
+            }
+
+            if (firstVerb != null) {
+                params.add(new Parameter(firstVerb, ParameterType.ACTION));
+            }
+
+            String actionExtended = null;
+            boolean foundFirstVerb = false;
+            for (int i = 0; i < words.size(); i++) {
+                String word = words.get(i);
+                Tag tag = tags.get(i);
+                if (foundFirstVerb && (Tag.isAdjective(tag) || Tag.isAdverb(tag) || Tag.isPreposition(tag) || Tag.isVerb(tag))) {
+                    actionExtended += " " + word;
+                } else if (foundFirstVerb) {
+                    break;
+                }
+                if (word.equals(firstVerb)) {
+                    actionExtended = firstVerb;
+                    foundFirstVerb = true;
+                }
+            }
+
+            String location = "";
+            boolean foundPreposition = false;
+            for (int i = 0; i < words.size(); i++) {
+                String word = words.get(i);
+                Tag tag = tags.get(i);
+                if (!foundPreposition && Tag.isPreposition(tag)) {
+                    location += word;
+                    foundPreposition = true;
+                } else if (foundPreposition) {
+                    location += " " + word;
+                    Tag nextTag = i < words.size() - 1 ? tags.get(i + 1) : null;
+                    if (Tag.isNoun(tag) && !Tag.isNoun(nextTag)) {
+                        break;
+                    }
+                }
+            }
+
+            if (actionExtended != null && !firstVerb.equals(actionExtended)) {
+                params.add(new Parameter(actionExtended, ParameterType.ACTION_EXTENDED));
+            }
+
+            if (!location.isEmpty()) {
+                params.add(new Parameter(location, ParameterType.LOCATION));
+            }
+
+            return params;
         };
     }
 
@@ -72,7 +144,7 @@ public abstract class Intent {
 
         return new IntentMatch(getName(),
                 getPattern().matcher(utterance.trim()),
-                getGroupPostProcessor(), getGroupTypeExtractor(words, tags));
+                getGroupPostProcessor(), getParameterExtractor(words, tags));
     }
 
     @Override
@@ -97,17 +169,17 @@ public abstract class Intent {
                 .toString();
     }
 
-    public static class IntentMatch implements Iterable<Group> {
+    public static class IntentMatch implements Iterable<Parameter> {
 
         private String intent = "fallback";
         private boolean matches = false;
         private int groupCount = -1;
-        private List<Group> groups = new ArrayList<>();
+        private Set<Parameter> parameters = new TreeSet<>(Parameter::compareTo);
 
         protected IntentMatch(String intentName,
                               Matcher matcher,
                               Function<String, String> groupPostProcessor,
-                              Function<String, List<GroupType>> groupTypeExtractor) {
+                              Function<String, Set<Parameter>> parameterExtractor) {
 
             this.matches = matcher.matches();
             if (this.matches) {
@@ -118,7 +190,7 @@ public abstract class Intent {
                     if (groupValue != null) {
                         groupValue = groupPostProcessor.apply(groupValue);
                         if (!groupValue.isEmpty()) {
-                            groups.add(new Group(groupTypeExtractor.apply(groupValue), groupValue));
+                            parameters.addAll(parameterExtractor.apply(groupValue));
                         }
                     }
                 }
@@ -133,13 +205,17 @@ public abstract class Intent {
             return groupCount;
         }
 
-        public List<Group> getGroups() {
-            return groups;
+        public String getIntent() {
+            return intent;
+        }
+
+        public Set<Parameter> getParameters() {
+            return parameters;
         }
 
         @Override
-        public Iterator<Group> iterator() {
-            return groups.iterator();
+        public Iterator<Parameter> iterator() {
+            return parameters.iterator();
         }
 
         @Override
@@ -150,12 +226,12 @@ public abstract class Intent {
             return matches == groups1.matches &&
                     groupCount == groups1.groupCount &&
                     Objects.equals(intent, groups1.intent) &&
-                    Objects.equals(groups, groups1.groups);
+                    Objects.equals(parameters, groups1.parameters);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(intent, matches, groupCount, groups);
+            return Objects.hash(intent, matches, groupCount, parameters);
         }
 
         @Override
@@ -164,7 +240,7 @@ public abstract class Intent {
                     "intent='" + intent + '\'' +
                     ", matches=" + matches +
                     ", groupCount=" + groupCount +
-                    ", groups=" + groups +
+                    ", parameters=" + parameters +
                     '}';
         }
     }

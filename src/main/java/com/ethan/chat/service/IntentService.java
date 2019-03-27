@@ -32,6 +32,7 @@ public class IntentService {
             add(new BrokenIntent());
             add(new DamagedItemIntent());
             add(new DamagedIntent());
+            add(new SoftwareIntent());
             add(new PerformanceItemIntent());
             add(new PerformanceIntent());
             add(new NotWorkingItemIntent());
@@ -73,7 +74,7 @@ public class IntentService {
         List<String> words = Tokenizer.wordsToList(utterance);
         List<Tag> tags = Tag.parse(tag(words));
 
-        System.out.println(":: Parts of Speech ::");
+        System.out.println("\n:: Parts of Speech ::");
         for (int i = 0; i < words.size(); i++) {
             System.out.println(words.get(i) + " = " + tags.get(i));
         }

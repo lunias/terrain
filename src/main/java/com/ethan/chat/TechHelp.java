@@ -1,6 +1,8 @@
 package com.ethan.chat;
 
 import com.ethan.chat.model.Intent;
+import com.ethan.chat.model.Parameter;
+import com.ethan.chat.model.User;
 import com.ethan.chat.service.IntentService;
 
 import java.util.List;
@@ -21,7 +23,11 @@ public class TechHelp {
                 List<Intent.IntentMatch> matches = IntentService.detectIntents(message);
                 System.out.println("\n:: Matches ::");
                 for (Intent.IntentMatch match : matches) {
-                    System.out.println("Intent: " + match);
+                    System.out.println("Intent: " + match.getIntent());
+                    for (Parameter parameter : match.getParameters()) {
+                        System.out.println(parameter.getTypes() + " -> " + parameter.getValue());
+                    }
+                    System.out.println();
                 }
             }
         }

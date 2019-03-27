@@ -4,13 +4,13 @@ import com.ethan.chat.model.Intent;
 
 import java.util.regex.Pattern;
 
-public class DamagedIntent extends Intent {
+public class SoftwareIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(?:damaged?|destroyed|dead|dying|ripped|ripping|crushed|cracking|cracked|dropped|drop|fell)(.*)");
+            Pattern.compile("(.*)(?:app|software)(.*)(?:crash|freez|hang|halt|lock|unrespon)(.*)");
 
-    public DamagedIntent() {
-        super("damaged");
+    public SoftwareIntent() {
+        super("software");
     }
 
     @Override
