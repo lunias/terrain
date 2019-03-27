@@ -23,7 +23,7 @@ public class FallbackIntent extends Intent {
     @Override
     public Function<User, String> respond() {
         return (user) -> {
-            return "I'm Sorry. I couldn't understand that request.";
+            return "I'm sorry. I couldn't understand that request.";
         };
     }
 }
