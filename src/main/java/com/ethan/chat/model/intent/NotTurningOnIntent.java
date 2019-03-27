@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class NotTurningOnIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:(?:turn|come?|power)ing\\son|(?:turn|come?|power)\\son).*");
+            Pattern.compile("(?:not|isn'?t|don'?t|doesn'?t|(?:does\\snot)|won'?t|(?:will\\snot))\\s(?:(?:turn|come?|power|boot|start)ing\\s?(?:on|up)|(?:turn|come?|power|boot|start)\\s?(?:on|up)).*");
 
     public NotTurningOnIntent() {
         super("not_turning_on");
