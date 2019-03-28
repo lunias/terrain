@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class BrokenIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(broken|broke|malfunctioning|malfunction|bricked|brick)(.*)");
+            Pattern.compile("(.*)(broken|broke|malfunctioning|malfunction|bricked|brick|busted|bust)(.*)");
 
     public BrokenIntent() {
         super("broken");

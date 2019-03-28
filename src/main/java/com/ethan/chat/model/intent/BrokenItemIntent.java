@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class BrokenItemIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:broken|broke|malfunctioning|malfunction|bricked|brick)");
+            Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:broken|broke|malfunctioning|malfunction|bricked|brick|busted|bust)");
 
     public BrokenItemIntent() {
         super("broken_item");
