@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class NoiseIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(?:noise|sound)(.*)");
+            Pattern.compile("(.*)(?:noise|sound|buzz|hum)(.*)");
 
     public NoiseIntent() {
         super("noise");

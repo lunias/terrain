@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class ErrorIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)error(.*)");
+            Pattern.compile("(.*)(?:bsod|error|blue\\sscreen)(.*)");
 
     public ErrorIntent() {
         super("error");
