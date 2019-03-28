@@ -35,12 +35,12 @@ public class TechHelp {
                 }
                 if (firstMatch != null) {
 
-                    String here = user.getGoalIntentName();
+                    String here = user.getCurrentIntentName();
                     String going = firstMatch.getIntent();
 
                     System.out.println("Transition: from " + here + " to " + going + "\n");
 
-                    user.setGoalIntentName(firstMatch.getIntent());
+                    user.setCurrentIntentName(firstMatch.getIntent());
                     user.addIntentHistory(firstMatch);
 
                     System.out.println((char)27 + "[33m" + "Response: " + firstMatch.respond(user) + (char)27 + "[0m" + "\n");

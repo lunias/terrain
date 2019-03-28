@@ -212,9 +212,7 @@ public abstract class Intent {
                     String groupValue = matcher.group(i + 1);
                     if (groupValue != null) {
                         groupValue = groupPostProcessor.apply(groupValue);
-                        if (!groupValue.isEmpty()) {
-                            parameters.addAll(parameterExtractor.apply(groupValue));
-                        }
+                        parameters.addAll(parameterExtractor.apply(groupValue));
                     }
                 }
                 this.respond = respond;

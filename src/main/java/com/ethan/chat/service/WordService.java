@@ -32,7 +32,9 @@ public class WordService {
 
     private static final Set<String> SOFTWARE = new HashSet<>(Arrays.asList(
             "word", "microsoft word", "excel", "microsoft excel", "chrome", "google chrome", "firefox",
-            "mozilla firefox", "safari", "bestbuy.com", "ios", "android", "apple"));
+            "mozilla firefox", "safari", "opera", "bestbuy.com", "ios", "android", "apple", "windows", "osx",
+            "os", "linux", "ubuntu", "photoshop", "gimp", "lightroom", "adobe", "flash", "browser",
+            "outlook"));
 
     public WordService() {
 

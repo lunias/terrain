@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class RepeatIntent extends Intent {
 
-    private static final Pattern PATTERN = Pattern.compile("(.*)(?:repeat|again|(one\\smore))(.*)");
+    private static final Pattern PATTERN = Pattern.compile("(.*)(?:repeat|again|(onc?e\\smore))(.*)");
 
     public RepeatIntent() {
         super("repeat");
@@ -31,6 +31,9 @@ public class RepeatIntent extends Intent {
             for (int i = 0; parameters.hasNext() && i < 2; i++) {
                 IntentMatch intentMatch = parameters.next();
                 if (i == 1) {
+                    if (intentMatch.getIntent().equalsIgnoreCase("repeat")) {
+                        break;
+                    }
                     return intentMatch.respond(user);
                 }
             }

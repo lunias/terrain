@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class PerformanceItemIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin|dropping|drops|skipping|skip|lagging|lag)");
+            Pattern.compile("(?:my\\s)?(.*?)\\s(.*\\s)?(:?is\\s)?.*(?:performing|perform|slowing|slow|stopping|stops|stop|freezing|freeze|locking|lock|spinning|spin|dropping|drops|skipping|skip|lagging|lag|hot|heating|respond|responding)");
 
     public PerformanceItemIntent() {
         super("performance_item");
@@ -30,6 +30,13 @@ public class PerformanceItemIntent extends Intent {
                 if (productIterator.hasNext()) {
                     String product = productIterator.next();
                     return "Got it. Your " + product + " isn't performing correctly. Let's see if I have any help to provide on the issue.";
+                }
+            }
+            if (!user.getSoftware().isEmpty()) {
+                Iterator<String> softwareIterator = new LinkedList<>(user.getSoftware()).descendingIterator();
+                if (softwareIterator.hasNext()) {
+                    String software = softwareIterator.next();
+                    return "Okay. " + software + " isn't performing correctly. Let's see if I have any help to provide on the issue.";
                 }
             }
             return "Sounds like a performance issue? What's not working right?";

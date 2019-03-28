@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class DamagedIntent extends Intent {
 
     private static final Pattern PATTERN =
-            Pattern.compile("(.*)(?:damaged?|destroyed|dead|dying|ate|ripped|ripping|crushed|cracking|cracked|dropped|drop|fell)(.*)");
+            Pattern.compile("(.*)(?:damaged?|destroyed|dead|dying|ripped|ripping|crushed|cracking|cracked|threw|thrown|dropped|drop|fell)(.*)");
 
     public DamagedIntent() {
         super("damaged");

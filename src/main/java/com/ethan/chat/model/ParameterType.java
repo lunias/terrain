@@ -2,15 +2,15 @@ package com.ethan.chat.model;
 
 public enum ParameterType {
 
-    PHONE_NUMBER,
-    ADDRESS,
-    ZIP,
+    PERSON,
+    ACTION,
+    ACTION_EXTENDED,
     PRODUCT,
     PRODUCT_OTHER,
     SOFTWARE,
     LOCATION,
-    PERSON,
-    ACTION,
-    ACTION_EXTENDED,
+    PHONE_NUMBER,
+    ADDRESS,
+    ZIP,
     UNKNOWN
 }

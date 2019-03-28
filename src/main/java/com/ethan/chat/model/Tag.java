@@ -95,7 +95,7 @@ public enum Tag {
                 }
             }
         }
-        System.out.println("unknown abbreviation: " + abbreviation);
+        System.err.println("unknown abbreviation: " + abbreviation);
         return UNKNOWN;
     }
 

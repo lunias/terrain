@@ -45,7 +45,7 @@ public class Parameter implements Comparable<Parameter> {
         if (theirs == null)
             return 1;
 
-        return theirs.compareTo(ours);
+        return -theirs.compareTo(ours);
     }
 
     @Override

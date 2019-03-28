@@ -8,7 +8,7 @@ public class User {
 
     private float confusion = 0.0f;
     private float frustration = 0.0f;
-    private String goalIntentName;
+    private String currentIntentName;
     private ArrayDeque<Intent.IntentMatch> intentHistory = new ArrayDeque<>();
     private String name;
     private String address;
@@ -21,8 +21,8 @@ public class User {
         this("fallback");
     }
 
-    public User(String goalIntentName) {
-        this.goalIntentName = goalIntentName;
+    public User(String currentIntentName) {
+        this.currentIntentName = currentIntentName;
     }
 
     public float getConfusion() {
@@ -41,12 +41,12 @@ public class User {
         this.frustration = frustration;
     }
 
-    public String getGoalIntentName() {
-        return goalIntentName;
+    public String getCurrentIntentName() {
+        return currentIntentName;
     }
 
-    public void setGoalIntentName(String goalIntentName) {
-        this.goalIntentName = goalIntentName;
+    public void setCurrentIntentName(String currentIntentName) {
+        this.currentIntentName = currentIntentName;
     }
 
     public ArrayDeque<Intent.IntentMatch> getIntentHistory() {
@@ -124,7 +124,7 @@ public class User {
         return "User{" +
                 "confusion=" + confusion +
                 ", frustration=" + frustration +
-                ", goalIntentName='" + goalIntentName + '\'' +
+                ", currentIntentName='" + currentIntentName + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", zip='" + zip + '\'' +
