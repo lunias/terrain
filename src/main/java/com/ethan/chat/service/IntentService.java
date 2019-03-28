@@ -62,6 +62,8 @@ public class IntentService {
             add(new GreetingIntent());
             add(new ThanksIntent());
             add(new InsultIntent());
+            add(new NewSequencesIntent());
+            add(new NSFWntent());
             add(new FallbackIntent());
         }
     };
